@@ -12,3 +12,8 @@ go get go.mongodb.org/mongo-driver/mongo
 ```
 go get github.com/bwmarrin/discordgo
 ```
+
+- discordgo embed
+```
+go get github.com/clinet/discordgo-embed
+```
