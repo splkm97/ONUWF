@@ -18,7 +18,7 @@ func mongoConn() (client *mongo.Client, ctx context.Context) {
 	dbPwd := loadFile(dbPath)
 
 	// timeout 기반의 Context 생성
-	ctx, _ = context.WithTimeout(context.Background(), time.Duration(500000000))
+	ctx, _ = context.WithTimeout(context.Background(), time.Second*5)
 	// Authetication 을 위한 Client Option 구성
 	clientOptions := options.Client().ApplyURI(
 		"mongodb://localhost:49153").SetAuth(
@@ -41,16 +41,16 @@ func mongoConn() (client *mongo.Client, ctx context.Context) {
 	return client, ctx
 }
 
-func GetCollection(colName string, mongoDB *mongo.Database) *mongo.Collection {
+func getCollection(colName string, mongoDB *mongo.Database) *mongo.Collection {
 	return mongoDB.Collection(colName)
 }
 
-func AllData(collection string, mongoDB *mongo.Database, ctx context.Context) string {
+func allData(collection string, mongoDB *mongo.Database, ctx context.Context) string {
 	// 데이터를 담을 변수 선언
 	var datas []bson.M
 
 	// 데이터 읽기
-	res, err := GetCollection(collection, mongoDB).Find(ctx, bson.M{})
+	res, err := getCollection(collection, mongoDB).Find(ctx, bson.M{})
 
 	// 결과를 변수에 담기
 	if err = res.All(ctx, &datas); err != nil {

@@ -22,7 +22,7 @@ func init() {
 	mongoDB := conn.Database("WF_Data")
 	flag.StringVar(&Token, "t", myStrToken, "Bot Token")
 	flag.Parse()
-	data := AllData("people", mongoDB, ctx)
+	data := allData("people", mongoDB, ctx)
 	fmt.Println(data)
 }
 
