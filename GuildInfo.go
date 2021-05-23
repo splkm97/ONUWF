@@ -1,20 +1,13 @@
 package main
 
-import (
-	"math/rand"
-	"time"
-
-	"github.com/bwmarrin/discordgo"
-	embed "github.com/clinet/discordgo-embed"
-)
-
 type Game struct {
-	ChannelID		string
-	NumOfPlayer		int
-	UserIDRole		map[string]string
-	Log				[]string
+	ChannelID   string
+	NumOfPlayer int
+	UserIDRole  map[string]string
+	Log         []string
 }
 
+/*
 func (g *Guild_Info) AddCardDeck(role string) {
 	if g.CardDeck == nil {
 		g.CardDeck = make([]string, 0)
@@ -64,3 +57,4 @@ func (g *Guild_Info) PrintGameLog(s *discordgo.Session) {
 		embed.NewGenericEmbed("게임 로그", logMsg),
 	)
 }
+*/

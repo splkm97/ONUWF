@@ -1,11 +1,6 @@
 package main
 
-import (
-	"fmt"
-	"reflect"
-	"testing"
-)
-
+/*
 var testGuild Guild_Info
 
 func testinit() {
@@ -98,3 +93,5 @@ func TestCardSeqGen(t *testing.T) {
 		}
 	})
 }
+
+*/
