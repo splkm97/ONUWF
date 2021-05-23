@@ -8,14 +8,11 @@ import (
 	embed "github.com/clinet/discordgo-embed"
 )
 
-type Guild_Info struct {
-	GID          string
-	CID          string
-	IngameUserID []string
-	NumOfPlayer  int
-	CardDeck     []string
-	RoleUID      map[string]string
-	GameLog      []string
+type Game struct {
+	ChannelID		string
+	NumOfPlayer		int
+	UserIDRole		map[string]string
+	Log				[]string
 }
 
 func (g *Guild_Info) AddCardDeck(role string) {

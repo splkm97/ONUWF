@@ -10,13 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var (
-	Token string
-)
-
 func init() {
-	Token = loadFile("./Auth/Token")
-	var conn *mongo.Client
+	envInit()
+	loggerInit()
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
 	data := allData("people", mongoDB, ctx)
@@ -24,7 +20,8 @@ func init() {
 }
 
 func main() {
-	dg, err := discordgo.New("Bot " + Token)
+	init()
+	dg, err := discordgo.New("Bot " + env["dgToken"])
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
 		return
