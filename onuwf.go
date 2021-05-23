@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"os/signal"
@@ -16,12 +15,10 @@ var (
 )
 
 func init() {
-	myStrToken := loadFile("./Auth/Token")
+	Token = loadFile("./Auth/Token")
 	var conn *mongo.Client
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
-	flag.StringVar(&Token, "t", myStrToken, "Bot Token")
-	flag.Parse()
 	data := allData("people", mongoDB, ctx)
 	fmt.Println(data)
 }
