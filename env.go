@@ -36,7 +36,6 @@ func loggerInit() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer logErrorFile.Close()
 	loggerLog = log.New(logErrorFile, "LOG: ", log.Ldate|log.Ltime|log.Lshortfile)
 	loggerError = log.New(logErrorFile, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
@@ -46,7 +45,6 @@ func loggerInit() {
 		loggerError.Println("Can not open env['logUserPath']:", env["logUserPath"])
 		log.Fatal(err)
 	}
-	defer logUserFile.Close()
 	loggerUser = log.New(logUserFile, "USER: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 
 	var logDebugFile *os.File
@@ -55,6 +53,5 @@ func loggerInit() {
 		loggerError.Println("Can not open env['logUserPath']:", env["logUserPath"])
 		log.Fatal(err)
 	}
-	defer logDebugFile.Close()
 	loggerDebug = log.New(logDebugFile, "DEBUG: ", log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 }
