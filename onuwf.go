@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
@@ -46,5 +47,9 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	if m.Content == "pong" {
 		s.ChannelMessageSend(m.ChannelID, "Ping!")
+	}
+	if strings.HasPrefix(m.Content, "ㅁ") {
+		s.ChannelMessageSend(m.ChannelID, "ㅁ으로 시작하는 메시지를 보내셨습니다.")
+		return
 	}
 }
