@@ -56,3 +56,46 @@ func allData(collection string, mongoDB *mongo.Database, ctx context.Context) st
 
 	return string(data)
 }
+
+func roleGuideInsert(mongoDB *mongo.Database) {
+	jsonFile, err := os.Open("Asset/role_guide.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer jsonFile.Close()
+
+	var byteValue []byte
+	byteValue, err = ioutil.ReadAll(jsonFile)
+	if err != nil {
+		loggerError.Println("json file open error: ", err)
+		log.Fatal(err)
+	}
+	var bDoc bson.D
+	bson.UnmarshalJSON([]byte(byteValue), &bDoc)
+	collection, err := mongoDB.Collection("Asset.role_guide")
+
+	insRes, err := collection.InsertMany(context.TODO(), guides)
+	if err != nil {
+		loggerError.Println("MongoDB Insert error: ", bDoc)
+		log.Fatal(err)
+	}
+	loggerDebug.Printf("Insert role_guide SUCCESS: Inserted %v documents\n", insRes.InsertedCount)
+
+	if err != nil {
+		loggerError.Println("Collection load error: ", err)
+		log.Fatal(err)
+	}
+	delRess, err := collection.DeleteMany(context.TODO(), bson.D)
+	if err != nil {
+		loggerError.Println("MongoDB Delete error: ", err)
+		log.Fatal(err)
+	}
+	loggerDebug.Printf("Delete role_guide SUCCESS: Deleted %v documents\n", delRes.DeletedCount)
+
+	insRes, err := collection.InsertMany(context.TODO(), guides)
+	if err != nil {
+		loggerError.Println("MongoDB Insert error: ", bDoc)
+		log.Fatal(err)
+	}
+	loggerDebug.Printf("Insert role_guide SUCCESS: Inserted %v documents\n", insRes.InsertedCount)
+}

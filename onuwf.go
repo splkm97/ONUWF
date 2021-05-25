@@ -16,6 +16,7 @@ func init() {
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
 	data := allData("people", mongoDB, ctx)
+	roleGuideINsert(mongoDB)
 	fmt.Println(data)
 }
 
