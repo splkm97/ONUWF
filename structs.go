@@ -5,6 +5,9 @@ type GuildInfo struct {
 	// 현재 게임이 진행중인 서버의 GID
 	GID string
 
+	// 현재 게임이 진행중인 채널의 CID
+	CID string
+
 	// 현재 게임에서 설정된 직업들의 RID 목록
 	RIDlist []int
 
