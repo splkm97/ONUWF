@@ -55,6 +55,5 @@ func (r *role) givePower(power int, g *game) {
 }
 
 // 특정 유저의 직업을 복사.
-func (r *role) copyRole(destUID, srcUID string) {
-	// TODO 내부 구현.
+func (r *role) copyRole(destUID, srcUID string, g *game) {
 }
