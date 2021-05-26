@@ -9,7 +9,7 @@ type game struct {
 	chanID string
 
 	// 현재 게임에서 설정된 직업들의 목록
-	roleIDlist []int
+	rolelist []role
 
 	// 현재 게임의 참가자들
 	userlist []user

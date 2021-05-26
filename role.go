@@ -18,13 +18,23 @@ func (r *role) getRoleInfo() string {
 
 // 유저의 직업을 반환
 func (r *role) getRole(uid string, g *game) role {
-	// TODO 내부 구현.
-	return role{}
+	loop := len(g.rolelist) - 3
+
+	idx := findUserIdx(uid, g.userlist)
+
+	for i := 0; i < loop; i++ {
+		if g.roleIdxTable[idx][i] == true {
+			return g.rolelist[i]
+		}
+	}
+
+	return nil
 }
 
 // 두 유저의 직업을 서로 교환
 func (r *role) swapRole(uid1, uid2 string, g *game) {
-	// TODO 내부 구현.
+	temp := getRole(uid1, g)
+
 }
 
 // 유저 직업과 버려진 직업을 교환.
@@ -40,8 +50,18 @@ func (r *role) getDiscard(disRoleIdx int, g *game) role {
 
 // 특정 직업의 유저 목록 반환.
 func (r *role) getRoleUser(find *role, g *game) (users []user) {
-	// TODO 내부 구현.
-	return make([]user, 0)
+	result := make([]user, 0)
+	loop := len(g.userlist)
+
+	idx := findRoleIdx(r, g.rolelist)
+
+	for i := 0; i < loop; i++ {
+		if g.roleIdxTable[i][idx] == true {
+			result = append(result, g.userlist[i])
+		}
+	}
+
+	return result
 }
 
 // 모든 사람들의 직업을 입장순서별로 한칸 회전.
@@ -56,4 +76,34 @@ func (r *role) givePower(power int, g *game) {
 
 // 특정 유저의 직업을 복사.
 func (r *role) copyRole(destUID, srcUID string, g *game) {
+	srcRole := r.getRole(srcUID, g)
+	srcIdx := findUserIdx(srcUID, g.userlist)
+	destIdx := findUserIdx(destUID, g.userlist)
+	for i := 0; i < len(g.roleIDlist); i++ {
+		if roleIdxTable[srcIdx][i] == true {
+			roleIdxTable[destIdx][i] = true
+		} else {
+			roleIdxTable[destIdx][i] = false
+		}
+	}
+}
+
+// 유저의 인덱스 찾기를 위한 함수
+func findUserIdx(uid string, target []user) int {
+	for i, item := range target {
+		if str == item.userID {
+			return i
+		}
+	}
+	return -1
+}
+
+// 직업의 인덱스 찾기를 위한 함수
+func findRoleIdx(r role, target []role) int {
+	for i, item := range target {
+		if r.String() == item.String() {
+			return i
+		}
+	}
+	return -1
 }

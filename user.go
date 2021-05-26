@@ -11,9 +11,6 @@ type user struct {
 	// 각 유저가 속한 게임이 진행중인 채널 ID
 	chanID string
 
-	// 각 유저의 role
-	userRole role
-
 	// 각 유저의 DM 채널 ID
 	dmChanID string
 }
