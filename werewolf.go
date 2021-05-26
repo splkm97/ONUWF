@@ -22,7 +22,7 @@ func (wf *werewolf) String() string {
 func (wf *werewolf) Action(uid1, uid2 string, disRole int, player *user, g *game, s *discordgo.Session) {
 	if disRole != 0 {
 		// 늑대인간이 유일한 경우.
-		target := g.getDiscard(disRole, g)
+		target := g.getDisRole(disRole, g)
 		msg := "당신은 `" + target.String() + "`이(가) 버려진 것을 확인했습니다."
 		s.ChannelMessageSendEmbed(player.dmChanID, embed.NewGenericEmbed("버려진 카드 1장 확인", msg))
 		g.appendLog("`" + player.nick + "` 은(는) 유일한 늑대인간이었습니다.")
