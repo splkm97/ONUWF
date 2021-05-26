@@ -7,9 +7,9 @@ type misticwolf struct {
 	role
 }
 
-// 직업명 '신비한 늑대' 를 반환하는 함수.
+// 직업명 '신비한늑대인간' 을 반환하는 함수.
 func (mw *misticwolf) String() string {
-	return "신비한 늑대"
+	return "신비한늑대인간"
 }
 
 // 신비한 늑대 능력 사용 함수.

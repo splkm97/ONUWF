@@ -8,9 +8,9 @@ type alphawolf struct {
 	role
 }
 
-// 직업명 '대장 늑대' 를 반환하는 함수.
+// 직업명 '태초의늑대인간' 를 반환하는 함수.
 func (aw *alphawolf) String() string {
-	return "대장 늑대"
+	return "태초의늑대인간"
 }
 
 // 대장 늑대의 능력을 사용하는 함수.
@@ -21,11 +21,11 @@ func (aw *alphawolf) Action(uid1, uid2 string, disRole int, player *user, g *gam
 	if disRole == 4 {
 		target := g.getRole(uid1)
 		g.swapRoleFromDiscard(uid1, disRole)
-		msg := "대장 늑대 `" + player.nick + "` 은(는) "
+		msg := "태초의 늑대인간 `" + player.nick + "` 은(는) "
 		msg += "`" + target.String() + "` 였던 `" + g.findUserByUID(uid1).nick + "` 을(를)\n"
 		msg += "늑대인간으로 변신시켰습니다."
 		g.appendLog(msg)
 	} else {
-		g.appendLog("대장 늑대 `" + player.nick + "` 은(는) 능력을 사용하지 않았습니다.")
+		g.appendLog("태초의 늑대인간 `" + player.nick + "` 은(는) 능력을 사용하지 않았습니다.")
 	}
 }
