@@ -19,6 +19,7 @@ func (r *role) getRoleInfo() string {
 // 유저의 직업을 반환
 func (r *role) getRole(uid string, g *game) role {
 	// TODO 내부 구현.
+	return role{}
 }
 
 // 두 유저의 직업을 서로 교환
@@ -34,11 +35,13 @@ func (r *role) switchRole(uid string, disRoleIdx int, g *game) {
 // 버려진 직업 중 하나 확인.
 func (r *role) getDiscard(disRoleIdx int, g *game) role {
 	// TODO 내부 구현.
+	return role{}
 }
 
 // 특정 직업의 유저 목록 반환.
 func (r *role) getRoleUser(find *role, g *game) (users []user) {
 	// TODO 내부 구현.
+	return make([]user, 0)
 }
 
 // 모든 사람들의 직업을 입장순서별로 한칸 회전.
@@ -47,7 +50,7 @@ func (r *role) rotateRole(g *game) {
 }
 
 // 유저에게 특수권한 부여
-func (r *role) givePower(uid string, g *game) {
+func (r *role) givePower(power int, g *game) {
 	// TODO 내부 구현.
 }
 
