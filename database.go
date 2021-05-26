@@ -76,7 +76,7 @@ func roleGuideInsert(mongoDB *mongo.Database) {
 	bson.Unmarshal([]byte(byteValue), &bDoc)
 	col := mongoDB.Collection("Asset.role_guide")
 
-	insRes, err := col.InsertMany(context.TODO(), bDoc)
+	insRes, err := col.InsertMany(context.TODO(), byteValue)
 	if err != nil {
 		loggerError.Println("MongoDB Insert error: ", bDoc)
 		log.Fatal(err)
@@ -94,7 +94,7 @@ func roleGuideInsert(mongoDB *mongo.Database) {
 	}
 	loggerDebug.Printf("Delete role_guide SUCCESS: Deleted %v documents\n", delRes.DeletedCount)
 
-	insRes, err = col.InsertMany(context.TODO(), bDoc)
+	insRes, err = col.InsertMany(context.TODO(), byteValue)
 	if err != nil {
 		loggerError.Println("MongoDB Insert error: ", bDoc)
 		log.Fatal(err)

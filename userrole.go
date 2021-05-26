@@ -14,3 +14,10 @@ type user struct {
 	// 각 유저의 DM 채널 ID
 	dmChanID string
 }
+
+// 각 직업들의 정보를 담고 있는 스트럭처
+type role interface {
+	// 각 직업별 행동 함수를 다르게 정의하기 위한 함수 선언
+	Action(uid1, uid2 string, disRoleIdx int, player *user, g *game)
+	String() string
+}

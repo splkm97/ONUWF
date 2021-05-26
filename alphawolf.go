@@ -19,8 +19,8 @@ func (aw *alphawolf) Action(uid1, uid2 string, disRole int, player *user, g *gam
 	wfIns := werewolf{}
 	wfIns.Action(uid1, uid2, disRole, player, g, s)
 	if disRole == 4 {
-		target := getRole(uid1, g)
-		switchRole(uid1, disRole, g)
+		target := g.getRole(uid1)
+		g.swapRoleFromDiscard(uid1, disRole)
 		msg := "대장 늑대 `" + player.nick + "` 은(는) "
 		msg += "`" + target.String() + "` 였던 `" + g.findUserByUID(uid1).nick + "` 을(를)\n"
 		msg += "늑대인간으로 변신시켰습니다."
