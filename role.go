@@ -8,9 +8,7 @@ type role struct {
 
 	// 각 직업별 행동 함수를 다르게 정의하기 위한 함수 선언
 	action func(uid1, uid2 string, disRoleIdx int, player *user, g *game)
-
-	// 각 직업명을 반환하는 String() 함수
-	String func()
+	String func() string
 }
 
 // 각 직업의 간단한 소개를 출력하는 함수.
@@ -34,12 +32,12 @@ func (r *role) switchRole(uid string, disRoleIdx int, g *game) {
 }
 
 // 버려진 직업 중 하나 확인.
-func (r *role) getDiscard(disRoleIdx int, g *game) {
+func (r *role) getDiscard(disRoleIdx int, g *game) role {
 	// TODO 내부 구현.
 }
 
 // 특정 직업의 유저 목록 반환.
-func (r *role) getRoleUser(find *role) (uids []string, g *game) {
+func (r *role) getRoleUser(find *role, g *game) (users []user) {
 	// TODO 내부 구현.
 }
 
@@ -57,4 +55,3 @@ func (r *role) givePower(uid string, g *game) {
 func (r *role) copyRole(destUID, srcUID string) {
 	// TODO 내부 구현.
 }
-

@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -71,10 +73,10 @@ func roleGuideInsert(mongoDB *mongo.Database) {
 		log.Fatal(err)
 	}
 	var bDoc bson.D
-	bson.UnmarshalJSON([]byte(byteValue), &bDoc)
-	collection, err := mongoDB.Collection("Asset.role_guide")
+	bson.Unmarshal([]byte(byteValue), &bDoc)
+	col := mongoDB.Collection("Asset.role_guide")
 
-	insRes, err := collection.InsertMany(context.TODO(), guides)
+	insRes, err := col.InsertMany(context.TODO(), bDoc)
 	if err != nil {
 		loggerError.Println("MongoDB Insert error: ", bDoc)
 		log.Fatal(err)
@@ -85,14 +87,14 @@ func roleGuideInsert(mongoDB *mongo.Database) {
 		loggerError.Println("Collection load error: ", err)
 		log.Fatal(err)
 	}
-	delRess, err := collection.DeleteMany(context.TODO(), bson.D)
+	delRes, err := col.DeleteMany(context.TODO(), bson.D)
 	if err != nil {
 		loggerError.Println("MongoDB Delete error: ", err)
 		log.Fatal(err)
 	}
 	loggerDebug.Printf("Delete role_guide SUCCESS: Deleted %v documents\n", delRes.DeletedCount)
 
-	insRes, err := collection.InsertMany(context.TODO(), guides)
+	insRes, err = col.InsertMany(context.TODO(), bDoc)
 	if err != nil {
 		loggerError.Println("MongoDB Insert error: ", bDoc)
 		log.Fatal(err)
