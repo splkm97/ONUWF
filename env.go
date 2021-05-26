@@ -9,6 +9,7 @@ import (
 
 var (
 	env map[string]string
+	rg  map[string]string
 
 	loggerLog   *log.Logger
 	loggerError *log.Logger
@@ -29,6 +30,21 @@ func envInit() {
 		log.Fatal(err)
 	}
 	json.Unmarshal([]byte(byteValue), &env)
+}
+
+func roleGuideInit() {
+	rgFile, err := os.Open("Asset/role_guide.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rgFile.Close()
+
+	var byteValue []byte
+	byteValue, err = ioutil.ReadAll(rgFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	json.Unmarshal([]byte(byteValue), &rg)
 }
 
 func loggerInit() {

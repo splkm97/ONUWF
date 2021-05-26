@@ -12,6 +12,7 @@ import (
 
 func init() {
 	envInit()
+	roleGuideInit()
 	loggerInit()
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
