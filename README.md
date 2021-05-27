@@ -17,3 +17,7 @@ go get github.com/bwmarrin/discordgo
 ```
 go get github.com/clinet/discordgo-embed
 ```
+
+# 설계 진행 상황
+
+https://gitmind.com/app/doc/1362405404
