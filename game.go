@@ -39,8 +39,9 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.masterID = mid
 	g.userlist = make([]user, 0)
 	g.rolelist = make([]role, 0)
-	curState = StatePrepare{}
-	logMsg = make([]string, 0)
+	g.disRole = make([]role, 0)
+	g.curState = StatePrepare{}
+	g.logMsg = make([]string, 0)
 }
 
 // UID 로 user 인스턴스를 구하는 함수

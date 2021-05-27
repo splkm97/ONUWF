@@ -64,10 +64,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 				s.ChannelMessageSend("현재 게임이 진행중인 채널입니다.")
 				return
 			}
-			gcidToGame = newGame(m.GuildID, m.ChannelID, m.Author.ID)
+			g := newGame(m.GuildID, m.ChannelID, m.Author.ID)
+			gcidToGame[m.GuildID+m.ChannelID] = g
+			startGame(s, m, g)
 		}
 		return
 	}
+}
+
+func startGame(s *discordgo.Session, m *discordgo.MessageCreate, g *game) {
+
 }
 
 func messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
