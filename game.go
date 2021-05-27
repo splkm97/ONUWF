@@ -8,6 +8,9 @@ type game struct {
 	// 현재 게임이 진행중인 채널의 CID
 	chanID string
 
+	// 현재 게임이 시작되어 봇이 보낸 MID
+	messageID string
+
 	// 게임을 생성한 방장의 UID
 	masterID string
 
@@ -60,6 +63,11 @@ func (g *game) appendLog(msg string) {
 		logMsg = make([]string, 0)
 	}
 	logMsg = append(logMsg, msg)
+}
+
+// 게임에 직업을 추가
+func (g *game) addRole(item role) {
+	g.rolelist.append(item)
 }
 
 // 유저의 직업을 반환
