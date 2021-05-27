@@ -8,6 +8,9 @@ type game struct {
 	// 현재 게임이 진행중인 채널의 CID
 	chanID string
 
+	// 게임을 생성한 방장의 UID
+	masterID string
+
 	// 현재 게임의 참가자들
 	userlist []user
 
@@ -27,6 +30,17 @@ type game struct {
 
 	// 게임 진행 상황을 기록하는 로그 메시지 배열
 	logMsg []string
+}
+
+func newGame(gid, cid, mid string) (g *game) {
+	g = &game{}
+	g.guildID = gid
+	g.chanID = cid
+	g.masterID = mid
+	g.userlist = make([]user, 0)
+	g.rolelist = make([]role, 0)
+	curState = StatePrepare{}
+	logMsg = make([]string, 0)
 }
 
 // UID 로 user 인스턴스를 구하는 함수

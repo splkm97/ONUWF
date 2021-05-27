@@ -10,6 +10,7 @@ import (
 var (
 	env map[string]string
 	rg  map[string]string
+	emj map[string]string
 
 	loggerLog   *log.Logger
 	loggerError *log.Logger
@@ -17,6 +18,7 @@ var (
 	loggerDebug *log.Logger
 )
 
+// 설치 환경 불러오기.
 func envInit() {
 	envFile, err := os.Open("env.json")
 	if err != nil {
@@ -32,6 +34,7 @@ func envInit() {
 	json.Unmarshal([]byte(byteValue), &env)
 }
 
+// 직업 가이드 에셋 불러오기.
 func roleGuideInit() {
 	rgFile, err := os.Open("Asset/role_guide.json")
 	if err != nil {
@@ -47,6 +50,23 @@ func roleGuideInit() {
 	json.Unmarshal([]byte(byteValue), &rg)
 }
 
+// 이모지 맵에 불러오기.
+func emojiInit() {
+	emjFile, err := os.Open("Asset/emoji.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer emjFile.Close()
+
+	var byteValue []byte
+	byteValue, err = ioutil.ReadAll(emjFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	json.Unmarshal([]byte(byteValue), &emj)
+}
+
+// 로거 변수 초기화.
 func loggerInit() {
 	logErrorFile, err := os.OpenFile(env["logErrorPath"], os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {

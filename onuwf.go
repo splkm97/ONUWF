@@ -10,15 +10,27 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+var (
+	uidToGid   map[string]string
+	gcidToGame map[string]game
+)
+
 func init() {
 	envInit()
 	roleGuideInit()
+	emjInit()
 	loggerInit()
+
+	uidToGid = make(map[string]string)
+	gcidToGame = make(map[string]string)
+
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
-	data := allData("people", mongoDB, ctx)
-	roleGuideInsert(mongoDB)
-	fmt.Println(data)
+
+	/*
+		data := allData("people", mongoDB, ctx)
+		fmt.Println(data)
+	*/
 }
 
 func main() {
@@ -28,6 +40,7 @@ func main() {
 		return
 	}
 	dg.AddHandler(messageCreate)
+	dg.AddHandler(messageReactionAdd)
 	err = dg.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
@@ -44,14 +57,62 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
-	}
-	if m.Content == "pong" {
-		s.ChannelMessageSend(m.ChannelID, "Ping!")
-	}
+
 	if strings.HasPrefix(m.Content, "ㅁ") {
-		s.ChannelMessageSend(m.ChannelID, "ㅁ으로 시작하는 메시지를 보내셨습니다.")
+		if m.Content == "ㅁ시작" {
+			if gcidToGame[m.GuildID+m.ChannelID] != nil {
+				s.ChannelMessageSend("현재 게임이 진행중인 채널입니다.")
+				return
+			}
+			gcidToGame = newGame(m.GuildID, m.ChannelID, m.Author.ID)
+		}
 		return
+	}
+}
+
+func messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+	// 봇 자신이 선택한 이모지라면 무시.
+	if r.UserID == s.State.User.ID {
+		return
+	}
+
+	curChan, _ := s.Channel(r.ChannelID)
+	// DM이 아닌 채널에서 사용한 이모지 중 게임이 시작되지 않은 길드에서 사용했다면 무시.
+	if curChan.Type != discordgo.ChannelTypeDM && gidToGame[r.GuildID] == nil {
+		return
+	}
+
+	g := gcidToGame[r.GuildID+r.ChannelID]
+
+	// 숫자 이모지 선택.
+	for i := 1; i < 26; i++ {
+		if r.Emoji.Name == emj[""+i] {
+			g.state.pressNumBtn(s, r, i)
+		}
+	}
+
+	// 쓰레기통 이모지 선택.
+	if r.Emoji.Name == emj["DISCARD"] {
+		g.state.pressDisBtn(s, r)
+	}
+
+	// O 이모지 선택.
+	if r.Emoji.Name == emj["YES"] {
+		g.state.pressYesBtn(s, r)
+	}
+
+	// X 이모지 선택.
+	if r.Emoji.Name == emj["NO"] {
+		g.state.pressNoBtn(s, r)
+	}
+
+	// 왼쪽 화살표 선택.
+	if r.Emoji.Name == emj["LEFT"] {
+		g.state.pressDirBtn(s, r, -1)
+	}
+
+	// 오른쪽 화살표 선택.
+	if r.Emoji.Name == emj["RIGHT"] {
+		g.state.pressDirBtn(s, r, 1)
 	}
 }
