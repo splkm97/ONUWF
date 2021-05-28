@@ -70,14 +70,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			g := newGame(m.GuildID, m.ChannelID, m.Author.ID)
 			isInGame[m.GuildID+m.ChannelID] = true
-			go startGame(s, m, g)
+			go startGame(m, g)
 		}
 		return
 	}
-}
-
-func startGame(s *discordgo.Session, m *discordgo.MessageCreate, g *game) {
-
 }
 
 func messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
