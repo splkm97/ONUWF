@@ -15,10 +15,13 @@ type game struct {
 	masterID string
 
 	// 현재 게임의 참가자들
-	userlist []user
+	userList []user
 
-	// 현재 게임에서 설정된 직업들의 목록
-	rolelist []role
+	// 현재 게임에서 순서대로 추가, 중복제거 된 직업들의 목록
+	roleSeq []role
+
+	// 현재 게임에서 사용중인 사용자에게 보여줄 중복 정렬된 직업들의 목록
+	roleView []role
 
 	// 현재 게임의 진행시점
 	curState state
@@ -40,8 +43,8 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.guildID = gid
 	g.chanID = cid
 	g.masterID = mid
-	g.userlist = make([]user, 0)
-	g.rolelist = make([]role, 0)
+	g.userList = make([]user, 0)
+	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
 	g.curState = StatePrepare{}
 	g.logMsg = make([]string, 0)
@@ -49,9 +52,9 @@ func newGame(gid, cid, mid string) (g *game) {
 
 // UID 로 user 인스턴스를 구하는 함수
 func (g *game) findUserByUID(uid string) (target *user) {
-	for i, item := range g.userlist {
+	for i, item := range g.userList {
 		if item.userID == uid {
-			return &g.userlist[i]
+			return &g.userList[i]
 		}
 	}
 	return nil
@@ -67,29 +70,27 @@ func (g *game) appendLog(msg string) {
 
 // 게임에 직업을 추가
 func (g *game) addRole(item role) {
-	g.rolelist.append(item)
+	g.roleSeq = append(g.roleSeq, item)
 }
 
 // 유저의 직업을 반환
 func (g *game) getRole(uid string) role {
-	loop := len(g.rolelist) - 3
-
-	idx := findUserIdx(uid, g.userlist)
+	loop := len(g.roleSeq)
+	idx := findUserIdx(uid, g.userList)
 
 	for i := 0; i < loop; i++ {
-		if g.roleIdxTable[idx][i] == true {
-			return g.rolelist[i]
+		if g.roleIdxTable[idx][i] {
+			return g.roleSeq[i]
 		}
 	}
-
 	return nil
 }
 
 // 유저의 직업을 업데이트
 func (g *game) setRole(uid string, item role) {
-	userIdx := findUserIdx(uid, g.userlist)
-	roleIdx := findRoleIdx(item, g.rolelist)
-	loop := len(g.rolelist)
+	userIdx := findUserIdx(uid, g.userList)
+	roleIdx := findRoleIdx(item, g.roleSeq)
+	loop := len(g.roleSeq)
 
 	for i := 0; i < loop; i++ {
 		g.roleIdxTable[userIdx][i] = false
@@ -124,15 +125,15 @@ func (g *game) swapRoleFromDiscard(uid string, disRoleIdx int) {
 }
 
 // 특정 직업의 유저 목록 반환.
-func (g *game) getRoleUser(find *role) (users []user) {
+func (g *game) getRoleUsers(find role) (users []user) {
 	result := make([]user, 0)
-	loop := len(g.userlist)
+	loop := len(g.userList)
 
-	idx := findRoleIdx(*find, g.rolelist)
+	idx := findRoleIdx(find, g.roleSeq)
 
 	for i := 0; i < loop; i++ {
-		if g.roleIdxTable[i][idx] == true {
-			result = append(result, g.userlist[i])
+		if g.roleIdxTable[i][idx] {
+			result = append(result, g.userList[i])
 		}
 	}
 
@@ -141,14 +142,14 @@ func (g *game) getRoleUser(find *role) (users []user) {
 
 // 모든 사람들의 직업을 입장순서별로 한칸 회전.
 func (g *game) rotateAllUserRole() {
-	loop := len(g.userlist)
+	loop := len(g.userList)
 
-	tmpRole := g.getRole(g.userlist[loop-1].userID)
+	tmpRole := g.getRole(g.userList[loop-1].userID)
 	for i := loop - 1; i > 0; i++ {
-		item := g.getRole(g.userlist[i-1].userID)
-		g.setRole(g.userlist[i].userID, item)
+		item := g.getRole(g.userList[i-1].userID)
+		g.setRole(g.userList[i].userID, item)
 	}
-	g.setRole(g.userlist[0].userID, tmpRole)
+	g.setRole(g.userList[0].userID, tmpRole)
 }
 
 // 유저에게 특수권한 부여
@@ -159,15 +160,7 @@ func (g *game) setPower(power int) {
 // 특정 유저의 직업을 복사.
 func (g *game) copyRole(destUID, srcUID string) {
 	srcRole := g.getRole(srcUID, g)
-	srcIdx := findUserIdx(srcUID, g.userlist)
-	destIdx := findUserIdx(destUID, g.userlist)
-	for i := 0; i < len(g.rolelist); i++ {
-		if roleIdxTable[srcIdx][i] == true {
-			roleIdxTable[destIdx][i] = true
-		} else {
-			roleIdxTable[destIdx][i] = false
-		}
-	}
+	g.setRole(destUID, srcRole)
 }
 
 // 유저의 인덱스 찾기를 위한 함수
@@ -183,7 +176,7 @@ func findUserIdx(uid string, target []user) int {
 // 직업의 인덱스 찾기를 위한 함수
 func findRoleIdx(r role, target []role) int {
 	for i, item := range target {
-		if g.String() == item.String() {
+		if r.String() == item.String() {
 			return i
 		}
 	}
