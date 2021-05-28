@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	uidToGid   map[string]string
-	gcidToGame map[string]game
+	isUserIn map[string]bool
+	isInGame map[string]bool
 )
 
 func init() {
@@ -21,8 +21,8 @@ func init() {
 	emjInit()
 	loggerInit()
 
-	uidToGid = make(map[string]string)
-	gcidToGame = make(map[string]string)
+	isUserIn = make(map[string]bool)
+	isInGame = make(map[string]bool)
 
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
@@ -60,13 +60,17 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, "ㅁ") {
 		if m.Content == "ㅁ시작" {
-			if gcidToGame[m.GuildID+m.ChannelID] != nil {
+			if isInGame[m.GuildID+m.ChannelID] {
 				s.ChannelMessageSend("현재 게임이 진행중인 채널입니다.")
 				return
 			}
+			if isUserIn[m.Author.ID] {
+				s.ChannelMessageSend("현재 게임을 플레이 중인 유저입니다.")
+				return
+			}
 			g := newGame(m.GuildID, m.ChannelID, m.Author.ID)
-			gcidToGame[m.GuildID+m.ChannelID] = g
-			startGame(s, m, g)
+			isInGame[m.GuildID+m.ChannelID] = true
+			go startGame(s, m, g)
 		}
 		return
 	}
