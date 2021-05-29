@@ -1,5 +1,7 @@
 package main
 
+import "github.com/bwmarrin/discordgo"
+
 // 게임 진행을 위한 정보를 담고 있는 스트럭처
 type game struct {
 	// 현재 게임이 진행중인 서버의 GID
@@ -7,6 +9,9 @@ type game struct {
 
 	// 현재 게임이 진행중인 채널의 CID
 	chanID string
+
+	// 현재 게임의 세션 주소
+	session *discordgo.Session
 
 	// 현재 게임이 시작되어 봇이 보낸 MID
 	messageID string
@@ -38,6 +43,28 @@ type game struct {
 	logMsg []string
 }
 
+type state interface {
+	pressNumBtn()
+	pressDisBtn()
+	pressYesBtn()
+	pressNoBtn()
+	pressDirBtn()
+}
+type StatePrepare struct {
+	state
+}
+
+func (sp *StatePrepare) pressNumBtn() {
+}
+func (sp *StatePrepare) pressDisBtn() {
+}
+func (sp *StatePrepare) pressYesBtn() {
+}
+func (sp *StatePrepare) pressNoBtn() {
+}
+func (sp *StatePrepare) pressDirBtn() {
+}
+
 func newGame(gid, cid, mid string) (g *game) {
 	g = &game{}
 	g.guildID = gid
@@ -46,8 +73,9 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
-	g.curState = StatePrepare{}
+	// g.curState = StatePrepare{}
 	g.logMsg = make([]string, 0)
+	return
 }
 
 // UID 로 user 인스턴스를 구하는 함수
@@ -62,10 +90,10 @@ func (g *game) findUserByUID(uid string) (target *user) {
 
 // 게임 로그에 메시지를 쌓는 함수.
 func (g *game) appendLog(msg string) {
-	if logMsg == nil {
-		logMsg = make([]string, 0)
+	if g.logMsg == nil {
+		g.logMsg = make([]string, 0)
 	}
-	logMsg = append(logMsg, msg)
+	g.logMsg = append(g.logMsg, msg)
 }
 
 // 게임에 직업을 추가
@@ -100,13 +128,13 @@ func (g *game) setRole(uid string, item role) {
 
 // 버려진 직업을 업데이트
 func (g *game) setDisRole(disRoleIdx int, item role) {
-	g.disRole[disRoleIdx] = role
+	g.disRole[disRoleIdx] = item
 }
 
 // 두 유저의 직업을 서로 교환
 func (g *game) swapRoleFromUser(uid1, uid2 string) {
-	role1 := g.getRole(uid1, g)
-	role2 := g.getRole(uid2, g)
+	role1 := g.getRole(uid1)
+	role2 := g.getRole(uid2)
 	g.setRole(uid1, role2)
 	g.setRole(uid2, role1)
 }
@@ -159,14 +187,14 @@ func (g *game) setPower(power int) {
 
 // 특정 유저의 직업을 복사.
 func (g *game) copyRole(destUID, srcUID string) {
-	srcRole := g.getRole(srcUID, g)
+	srcRole := g.getRole(srcUID)
 	g.setRole(destUID, srcRole)
 }
 
 // 유저의 인덱스 찾기를 위한 함수
 func findUserIdx(uid string, target []user) int {
 	for i, item := range target {
-		if str == item.userID {
+		if uid == item.userID {
 			return i
 		}
 	}

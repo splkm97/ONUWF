@@ -12,25 +12,23 @@ import (
 
 var (
 	isUserIn map[string]bool
-	isInGame map[string]bool
+	isInGame map[string]*game
 )
 
 func init() {
 	envInit()
 	roleGuideInit()
-	emjInit()
+	emojiInit()
 	loggerInit()
 
 	isUserIn = make(map[string]bool)
-	isInGame = make(map[string]bool)
+	isInGame = make(map[string]*game)
 
 	conn, ctx := mongoConn()
 	mongoDB := conn.Database("WF_Data")
 
-	/*
-		data := allData("people", mongoDB, ctx)
-		fmt.Println(data)
-	*/
+	data := allData("people", mongoDB, ctx)
+	fmt.Println(data)
 }
 
 func main() {
@@ -60,17 +58,15 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if strings.HasPrefix(m.Content, "ㅁ") {
 		if m.Content == "ㅁ시작" {
-			if isInGame[m.GuildID+m.ChannelID] {
-				s.ChannelMessageSend("현재 게임이 진행중인 채널입니다.")
+			if isInGame[m.GuildID+m.ChannelID] != nil {
+				s.ChannelMessageSend(m.ChannelID, "현재 게임이 진행중인 채널입니다.")
 				return
 			}
 			if isUserIn[m.Author.ID] {
-				s.ChannelMessageSend("현재 게임을 플레이 중인 유저입니다.")
+				s.ChannelMessageSend(m.ChannelID, "현재 게임을 플레이 중인 유저입니다.")
 				return
 			}
-			g := newGame(m.GuildID, m.ChannelID, m.Author.ID)
-			isInGame[m.GuildID+m.ChannelID] = true
-			go startGame(m, g)
+			go startGame(m)
 		}
 		return
 	}
@@ -84,41 +80,43 @@ func messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 
 	curChan, _ := s.Channel(r.ChannelID)
 	// DM이 아닌 채널에서 사용한 이모지 중 게임이 시작되지 않은 길드에서 사용했다면 무시.
-	if curChan.Type != discordgo.ChannelTypeDM && gidToGame[r.GuildID] == nil {
+	if curChan.Type != discordgo.ChannelTypeDM && isInGame[r.GuildID+r.ChannelID] == nil {
 		return
 	}
 
-	g := gcidToGame[r.GuildID+r.ChannelID]
+	/*
+		g := isInGame[r.GuildID+r.ChannelID]
 
-	// 숫자 이모지 선택.
-	for i := 1; i < 26; i++ {
-		if r.Emoji.Name == emj[""+i] {
-			g.state.pressNumBtn(s, r, i)
+		// 숫자 이모지 선택.
+		for i := 1; i < 26; i++ {
+			if r.Emoji.Name == emj[string(i)] {
+				g.curState.pressNumBtn(s, r, i)
+			}
 		}
-	}
 
-	// 쓰레기통 이모지 선택.
-	if r.Emoji.Name == emj["DISCARD"] {
-		g.state.pressDisBtn(s, r)
-	}
+		// 쓰레기통 이모지 선택.
+		if r.Emoji.Name == emj["DISCARD"] {
+			g.curState.pressDisBtn(s, r)
+		}
 
-	// O 이모지 선택.
-	if r.Emoji.Name == emj["YES"] {
-		g.state.pressYesBtn(s, r)
-	}
+		// O 이모지 선택.
+		if r.Emoji.Name == emj["YES"] {
+			g.curState.pressYesBtn(s, r)
+		}
 
-	// X 이모지 선택.
-	if r.Emoji.Name == emj["NO"] {
-		g.state.pressNoBtn(s, r)
-	}
+		// X 이모지 선택.
+		if r.Emoji.Name == emj["NO"] {
+			g.curState.pressNoBtn(s, r)
+		}
 
-	// 왼쪽 화살표 선택.
-	if r.Emoji.Name == emj["LEFT"] {
-		g.state.pressDirBtn(s, r, -1)
-	}
+		// 왼쪽 화살표 선택.
+		if r.Emoji.Name == emj["LEFT"] {
+			g.curState.pressDirBtn(s, r, -1)
+		}
 
-	// 오른쪽 화살표 선택.
-	if r.Emoji.Name == emj["RIGHT"] {
-		g.state.pressDirBtn(s, r, 1)
-	}
+		// 오른쪽 화살표 선택.
+		if r.Emoji.Name == emj["RIGHT"] {
+			g.curState.pressDirBtn(s, r, 1)
+		}
+	*/
 }
