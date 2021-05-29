@@ -23,12 +23,13 @@ func init() {
 
 	isUserIn = make(map[string]bool)
 	isInGame = make(map[string]*game)
+	/*
+		conn, ctx := mongoConn()
+		mongoDB := conn.Database("WF_Data")
 
-	conn, ctx := mongoConn()
-	mongoDB := conn.Database("WF_Data")
-
-	data := allData("people", mongoDB, ctx)
-	fmt.Println(data)
+		data := allData("people", mongoDB, ctx)
+		fmt.Println(string(data))
+	*/
 }
 
 func main() {

@@ -1,6 +1,6 @@
 ONUWF
 env.json
-log
-log/LogError
-log/LogUser
-log/LogDebug
+Log
+Log/error.log
+Log/user.log
+Log/debug.log
