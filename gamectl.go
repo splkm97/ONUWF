@@ -51,17 +51,21 @@ func sendGuideMsg(s *discordgo.Session, g *game) {
 	if s != nil {
 		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("직업 추가", "1. 늑대인간 ..."))
 		g.roleAddMsgID = roleMsg.ID
-		go addRoleAddEmoji(s, roleMsg)
-		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("게임 참가", "`O`: 입장\n`X`: 퇴장"))
+		addRoleAddEmoji(s, roleMsg)
+		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("게임 참가", "`✔️`: 입장\n`❌`: 퇴장"))
 		g.enterGameMsgID = enterMsg.ID
-		go addEnterGameEmoji(s, enterMsg)
+		addEnterGameEmoji(s, enterMsg)
 	}
 }
 
 func addRoleAddEmoji(s *discordgo.Session, msg *discordgo.Message) {
-	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["LEFT"])
+	err := s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["LEFT"])
+	if err != nil {
+		fmt.Println(emj["LEFT"])
+		fmt.Println(err)
+	}
 	for i := 1; i <= 10; i++ {
-		s.MessageReactionAdd(msg.ChannelID, msg.ID, emj[string(i)])
+		s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["n"+string(i)])
 	}
 	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["RIGHT"])
 }
@@ -101,7 +105,7 @@ func rcInGame(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	g := isInGame[r.GuildID+r.ChannelID]
 	// 숫자 이모지 선택.
 	for i := 1; i <= 10; i++ {
-		if r.Emoji.Name == emj[string(i)] {
+		if r.Emoji.Name == emj["n"+string(i)] {
 			g.curState.pressNumBtn(s, r, i)
 		}
 	}
