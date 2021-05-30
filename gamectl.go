@@ -52,7 +52,7 @@ func sendGuideMsg(s *discordgo.Session, g *game) {
 		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("직업 추가", "1. 늑대인간 ..."))
 		g.roleAddMsgID = roleMsg.ID
 		addRoleAddEmoji(s, roleMsg)
-		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("게임 참가", ": 입장\n: 퇴장"))
+		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("게임 참가", "⭕: 입장\n❌`: 퇴장"))
 		g.enterGameMsgID = enterMsg.ID
 		addEnterGameEmoji(s, enterMsg)
 	}
