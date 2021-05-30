@@ -59,9 +59,9 @@ func sendGuideMsg(s *discordgo.Session, g *game) {
 }
 
 func addRoleAddEmoji(s *discordgo.Session, msg *discordgo.Message) {
-	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["LEFT"])
 	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["YES"])
 	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["NO"])
+	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["LEFT"])
 	s.MessageReactionAdd(msg.ChannelID, msg.ID, emj["RIGHT"])
 }
 
@@ -109,22 +109,23 @@ func rcInGame(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	}
 	// 쓰레기통 이모지 선택.
 	if r.Emoji.Name == emj["DISCARD"] {
-		g.curState.pressDisBtn(s, r)
+		go g.curState.pressDisBtn(s, r)
 	}
 	// O 이모지 선택.
 	if r.Emoji.Name == emj["YES"] {
-		g.curState.pressYesBtn(s, r)
+		go g.curState.pressYesBtn(s, r)
 	}
 	// X 이모지 선택.
 	if r.Emoji.Name == emj["NO"] {
-		g.curState.pressNoBtn(s, r)
+		go g.curState.pressNoBtn(s, r)
 	}
 	// 왼쪽 화살표 선택.
 	if r.Emoji.Name == emj["LEFT"] {
-		g.curState.pressDirBtn(s, r, -1)
+		go g.curState.pressDirBtn(s, r, -1)
 	}
 	// 오른쪽 화살표 선택.
 	if r.Emoji.Name == emj["RIGHT"] {
-		g.curState.pressDirBtn(s, r, 1)
+		go g.curState.pressDirBtn(s, r, 1)
 	}
+	s.MessageReactionRemove(r.ChannelID, r.MessageID, r.Emoji.Name, r.UserID)
 }
