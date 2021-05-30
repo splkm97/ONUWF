@@ -48,18 +48,19 @@ func (sPrepare StatePrepare) pressDisBtn(s *discordgo.Session, r *discordgo.Mess
 // pressYesBtn 사용자가 yes 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
 func (sPrepare StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if r.MessageID == sPrepare.g.enterGameMsgID {
-		userNick, _ := s.User(r.UserID)
-		userDM, _ := s.UserChannelCreate(r.UserID)
-		u := user{userID: r.UserID, nick: userNick.Username, chanID: r.ChannelID, dmChanID: userDM.ID}
-		sPrepare.g.userList = append(sPrepare.g.userList, u)
+		if findUserIdx(r.UserID, sPrepare.g.userList) == -1 {
+			//roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("직업 추가", "1. 늑대인간 ..."))
+
+		} else {
+			// user 만들어서 userList에 append()
+			userNick, _ := s.User(r.UserID)
+			userDM, _ := s.UserChannelCreate(r.UserID)
+			u := user{userID: r.UserID, nick: userNick.Username, chanID: r.ChannelID, dmChanID: userDM.ID}
+			sPrepare.g.userList = append(sPrepare.g.userList, u)
+		}
 	} else if r.MessageID == sPrepare.g.roleAddMsgID {
-		// roleFactory에서 현재 roleindex 위치 값을 받아
+		// roleFactory에서 현재 roleindex 위치 값을 받아 role 추가
 		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, sPrepare.rf.generateRole(sPrepare.roleIndex))
-		/*
-			if len(g.roleView) == len(g.userList)+3 {
-				g.state = StatePlayable{g: g}
-			}
-		*/
 	}
 }
 
@@ -72,9 +73,19 @@ func (sPrepare StatePrepare) pressNoBtn(s *discordgo.Session, r *discordgo.Messa
 
 // pressDirBtn 좌 -1, 우 1 사용자가 좌우 방향 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
 func (sPrepare StatePrepare) pressDirBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd, dir int) {
-	// 게임 시작
+	if r.MessageID == sPrepare.g.enterGameMsgID {
+		// 게임 시작
+		if dir == 1 {
+			if len(sPrepare.g.roleSeq) == len(sPrepare.g.userList) + 3 {
+				g.state = StatePlayable{g: sPrepare.g}
+			} else {
 
-	// roleindex 증감
+			}
+		}
+	} else if r.MessageID == sPrepare.g.roleAddMsgID {
+		// roleindex 증감
+		
+	}
 }
 
 // sendFinish 사용자가 종료 메세지를 보냈을 때 StatePrepare에서 하는 동작
