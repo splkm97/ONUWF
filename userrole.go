@@ -30,47 +30,47 @@ func (rf roleFactory) make(i int) r role {
 	if num == 1 {
 		r = roleSentinel{}
 	} else if num == 2 {
-		r = roleDoppelganger{}
+		r = roleDoppelganger{}
 	} else if num == 3 {
-		r = roleWerewolf}
+		r = roleWerewolf}
 	} else if num == 4 {
-		r = roleAlphawolf{}
+		r = roleAlphawolf{}
 	} else if num == 5 {
-		r = roleMisticwolf{}
+		r = roleMisticwolf{}
 	} else if num == 6 {
-		r = roleMinion{}
+		r = roleMinion{}
 	} else if num == 7 {
-		r = roleFreemasonry{}
+		r = roleFreemasonry{}
 	} else if num == 8 {
-		r = roleSeer{}
+		r = roleSeer{}
 	} else if num == 9 {
-		r = roleApprenticeseer{}
+		r = roleApprenticeseer{}
 	} else if num == 10 {
-		r = roleParanormalinvestigator{}
+		r = roleParanormalinvestigator{}
 	} else if num == 11 {
-		r = roleRober{}
+		r = roleRober{}
 	} else if num == 12 {
 		r = roleWitch{}
 	} else if num == 13 {
-		r = roleTroublemaker{}
+		r = roleTroublemaker{}
 	} else if num == 14 {
-		r = roleVillageidiot{}
+		r = roleVillageidiot{}
 	} else if num == 15 {
-		r = roleDrunk{}
+		r = roleDrunk{}
 	} else if num == 16 {
-		r = roleInsomniac{}
+		r = roleInsomniac{}
 	} else if num == 17 {
-		r = roleRevealer{}
+		r = roleRevealer{}
 	} else if num == 18 {
-		r = roleTanner{}
+		r = roleTanner{}
 	} else if num == 19 {
-		r = roleHunter{}
+		r = roleHunter{}
 	} else if num == 20 {
-		r = roleBodugaurd{}
+		r = roleBodugaurd{}
 	} else if num == 21 {
-		r = roleVillager{}
+		r = roleVillager{}
 	} else if num == 22 {
-		r = roleDreamwolf{}
+		r = roleDreamwolf{}
 	}
 	return r
 }
