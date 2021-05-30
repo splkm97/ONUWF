@@ -13,8 +13,8 @@ type game struct {
 	// 현재 게임의 세션 주소
 	session *discordgo.Session
 
-	// 현재 게임이 시작되어 봇이 보낸 MID
-	messageID []string
+	roleAddMsgID   string
+	enterGameMsgID string
 
 	// 게임을 생성한 방장의 UID
 	masterID string

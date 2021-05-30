@@ -44,7 +44,7 @@ func startGame(m *discordgo.MessageCreate) {
 // 게임 시작 안내 메시지 전송.
 func sendGuideMsg(s *discordgo.Session, g *game) {
 	if s != nil {
-		sendMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("", ""))
+		sendMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("Guide msg", "this is guide msg"))
 		g.messageID = append(g.messageID, sendMsg.ID)
 	}
 }
