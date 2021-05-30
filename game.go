@@ -14,7 +14,7 @@ type game struct {
 	session *discordgo.Session
 
 	// 현재 게임이 시작되어 봇이 보낸 MID
-	messageID string
+	messageID []string
 
 	// 게임을 생성한 방장의 UID
 	masterID string
@@ -70,6 +70,7 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.guildID = gid
 	g.chanID = cid
 	g.masterID = mid
+	g.messageID = make([]string, 0)
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)

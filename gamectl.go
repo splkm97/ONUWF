@@ -45,7 +45,7 @@ func startGame(m *discordgo.MessageCreate) {
 func sendGuideMsg(s *discordgo.Session, g *game) {
 	if s != nil {
 		sendMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("", ""))
-		g.messageID = sendMsg.ID
+		g.messageID = append(g.messageID, sendMsg.ID)
 	}
 }
 
