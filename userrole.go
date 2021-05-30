@@ -23,12 +23,13 @@ type role interface {
 }
 
 type roleFactory struct {
+	
 }
 
-func (rf roleFactory) make(i int) (r role) {
+func (rf roleFactory) generateRole(num int) (r role) {
 	if num == 1 {
 		r = roleSentinel{}
-	} else if num == 2 {
+	} /*else if num == 2 {
 		r = roleDoppelganger{}
 	} else if num == 3 {
 		r = roleWerewolf{}
@@ -71,5 +72,18 @@ func (rf roleFactory) make(i int) (r role) {
 	} else if num == 22 {
 		r = rolereamwolf{}
 	}
+	*/
 	return r
+}
+
+type roleSentinel struct {
+
+}
+
+func (r roleSentinel) Action(uid1, uid2 string, disRoleIdx int, player *user, g *game) {
+	
+}
+
+func (r roleSentinel) String() string {
+	return "수호자"
 }

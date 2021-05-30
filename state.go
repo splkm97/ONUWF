@@ -35,13 +35,6 @@ type StatePrepare struct {
 	rf roleFactory
 }
 
-// removeRole 현재 게임에 직업을 삭제
-func (sPrepare StatePrepare) removeRole(item role) {
-	if index := findRoleIdx(item, sPrepare.g.roleSeq); index != -1 {
-		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq[:index], sPrepare.g.roleSeq[index+1:]...)
-	}
-}
-
 // pressNumBtn 사용자가 숫자 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
 func (sPrepare StatePrepare) pressNumBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd, num int) {
 	// do nothing
@@ -55,11 +48,13 @@ func (sPrepare StatePrepare) pressDisBtn(s *discordgo.Session, r *discordgo.Mess
 // pressYesBtn 사용자가 yes 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
 func (sPrepare StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if r.MessageID == sPrepare.g.enterGameMsgID {
-		u := user{userID: r.UserID, nick: s.User(r.UserID).Username, chanID: r.ChannelID, dmChanID: s.UserChannelCreate(r.UserID).ID}
+		userNick, _ := s.User(r.UserID)
+		userDM, _ := s.UserChannelCreate(r.UserID)
+		u := user{userID: r.UserID, nick: userNick.Username, chanID: r.ChannelID, dmChanID: userDM.ID}
 		sPrepare.g.userList = append(sPrepare.g.userList, u)
 	} else if r.MessageID == sPrepare.g.roleAddMsgID {
 		// roleFactory에서 현재 roleindex 위치 값을 받아
-		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, sPrepare.rf.make(sPrepare.rolIndex))
+		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, sPrepare.rf.generateRole(sPrepare.roleIndex))
 		/*
 			if len(g.roleView) == len(g.userList)+3 {
 				g.state = StatePlayable{g: g}
@@ -70,7 +65,9 @@ func (sPrepare StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.Mess
 
 // pressNoBtn 사용자가 No 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
 func (sPrepare StatePrepare) pressNoBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
-	sPrepare.removeRole(sPrepare.rolIndex)
+	if index := findRoleIdx(sPrepare.rf.generateRole(sPrepare.roleIndex), sPrepare.g.roleSeq); index != -1 {
+		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq[:index], sPrepare.g.roleSeq[index+1:]...)
+	}
 }
 
 // pressDirBtn 좌 -1, 우 1 사용자가 좌우 방향 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
