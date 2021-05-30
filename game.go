@@ -1,8 +1,12 @@
 package main
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"os"
 
-// 게임 진행을 위한 정보를 담고 있는 스트럭처
+	"github.com/bwmarrin/discordgo"
+)
+
+// game 구조체는 게임 진행을 위한 정보를 담고 있는 스트럭처
 type game struct {
 	// 현재 게임이 진행중인 서버의 GID
 	guildID string
@@ -41,28 +45,8 @@ type game struct {
 
 	// 게임 진행 상황을 기록하는 로그 메시지 배열
 	logMsg []string
-}
 
-type state interface {
-	pressNumBtn()
-	pressDisBtn()
-	pressYesBtn()
-	pressNoBtn()
-	pressDirBtn()
-}
-type StatePrepare struct {
-	state
-}
-
-func (sp *StatePrepare) pressNumBtn() {
-}
-func (sp *StatePrepare) pressDisBtn() {
-}
-func (sp *StatePrepare) pressYesBtn() {
-}
-func (sp *StatePrepare) pressNoBtn() {
-}
-func (sp *StatePrepare) pressDirBtn() {
+	killChan chan os.Signal
 }
 
 func newGame(gid, cid, mid string) (g *game) {
@@ -70,11 +54,10 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.guildID = gid
 	g.chanID = cid
 	g.masterID = mid
-	g.messageID = make([]string, 0)
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
-	// g.curState = StatePrepare{}
+	//g.curState = StatePrepare{}
 	g.logMsg = make([]string, 0)
 	return
 }

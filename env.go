@@ -9,7 +9,7 @@ import (
 
 var (
 	env map[string]string
-	rg  map[string]string
+	rg  []roleGuide
 	emj map[string]string
 
 	loggerLog   *log.Logger
@@ -18,9 +18,17 @@ var (
 	loggerDebug *log.Logger
 )
 
+type roleGuide struct {
+	roleName  string `json:"roleName"`
+	roleGuide string `json:"roleGuide"`
+	max       int    `json:"max"`
+	faction   string `json:"faction"`
+}
+
 // 설치 환경 불러오기.
 func envInit() {
 	envFile, err := os.Open("env.json")
+	defer envFile.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,6 +45,7 @@ func envInit() {
 // 직업 가이드 에셋 불러오기.
 func roleGuideInit() {
 	rgFile, err := os.Open("Asset/role_guide.json")
+	defer rgFile.Close()
 	if err != nil {
 		log.Fatal(err)
 	}

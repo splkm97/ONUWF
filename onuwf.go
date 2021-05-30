@@ -69,7 +69,18 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 			go startGame(m)
 		}
-		return
+		if m.Content == "ㅁ강제종료" {
+			if thisGame := isInGame[m.GuildID+m.ChannelID]; thisGame == nil {
+				s.ChannelMessageSend(m.ChannelID, "현재 채널에서 진행중인 게임이 없습니다.")
+				return
+			} else {
+				thisGame.session.Close()
+				isInGame[m.GuildID+m.ChannelID] = nil
+				s.ChannelMessageSend(m.ChannelID, "현재 채널에서 진행중인 게임을 강제종료합니다.")
+				return
+			}
+
+		}
 	}
 }
 
