@@ -29,10 +29,10 @@ type StatePrepare struct {
 	g *game
 
 	// factory 에서 쓰이게 될 role index
-	roleIndex	int
+	roleIndex int
 
 	// roleFactory
-	rf	roleFactory
+	rf roleFactory
 }
 
 // removeRole 현재 게임에 직업을 삭제
@@ -55,14 +55,16 @@ func (sPrepare StatePrepare) pressDisBtn(s *discordgo.Session, r *discordgo.Mess
 // pressYesBtn 사용자가 yes 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
 func (sPrepare StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	if r.MessageID == sPrepare.g.enterGameMsgID {
-		user := {userID: r.UserID, nick: s.User(r.UserID).Username, chanID: r.ChannelID, dmChanID: s.UserChannelCreate(r.UserID).ID}
-		userList = append(userList, user)
+		u := user{userID: r.UserID, nick: s.User(r.UserID).Username, chanID: r.ChannelID, dmChanID: s.UserChannelCreate(r.UserID).ID}
+		sPrepare.g.userList = append(sPrepare.g.userList, u)
 	} else if r.MessageID == sPrepare.g.roleAddMsgID {
 		// roleFactory에서 현재 roleindex 위치 값을 받아
-		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, rf.make(sPrepare.rolIndex))
-		if len(g.roleView) == len(g.userList)+3 {
-			g.state = StatePlayable{g: g}
-		}
+		sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, sPrepare.rf.make(sPrepare.rolIndex))
+		/*
+			if len(g.roleView) == len(g.userList)+3 {
+				g.state = StatePlayable{g: g}
+			}
+		*/
 	}
 }
 
