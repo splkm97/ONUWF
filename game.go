@@ -97,11 +97,6 @@ func (g *game) appendLog(msg string) {
 	g.logMsg = append(g.logMsg, msg)
 }
 
-// 게임에 직업을 추가
-func (g *game) addRole(item role) {
-	g.roleSeq = append(g.roleSeq, item)
-}
-
 // 유저의 직업을 반환
 func (g *game) getRole(uid string) role {
 	loop := len(g.roleSeq)
