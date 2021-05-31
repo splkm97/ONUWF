@@ -107,24 +107,21 @@ func rcInGame(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 			g.curState.pressNumBtn(s, r, i)
 		}
 	}
-	// 쓰레기통 이모지 선택.
-	if r.Emoji.Name == emj["DISCARD"] {
+	switch r.Emoji.Name {
+	case emj["DISCARD"]:
+		// 쓰레기통 이모지 선택.
 		go g.curState.pressDisBtn(s, r)
-	}
-	// O 이모지 선택.
-	if r.Emoji.Name == emj["YES"] {
+	case emj["YES"]:
+		// O 이모지 선택.
 		go g.curState.pressYesBtn(s, r)
-	}
-	// X 이모지 선택.
-	if r.Emoji.Name == emj["NO"] {
+	case emj["NO"]:
+		// X 이모지 선택.
 		go g.curState.pressNoBtn(s, r)
-	}
-	// 왼쪽 화살표 선택.
-	if r.Emoji.Name == emj["LEFT"] {
+	case emj["LEFT"]:
+		// 왼쪽 화살표 선택.
 		go g.curState.pressDirBtn(s, r, -1)
-	}
-	// 오른쪽 화살표 선택.
-	if r.Emoji.Name == emj["RIGHT"] {
+	case emj["RIGHT"]:
+		// 오른쪽 화살표 선택.
 		go g.curState.pressDirBtn(s, r, 1)
 	}
 	s.MessageReactionRemove(r.ChannelID, r.MessageID, r.Emoji.Name, r.UserID)
