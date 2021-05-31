@@ -28,7 +28,7 @@ type roleFactory struct {
 func (rf *roleFactory) generateRole(num int) (r role) {
 	switch num {
 	case 1:
-		r = roleSentinel{}
+		r = &roleSentinel{}
 		/*
 			case 2:
 				r = roleDoppelganger{}
@@ -73,6 +73,7 @@ func (rf *roleFactory) generateRole(num int) (r role) {
 			case 22:
 				r = roleDreamwolf{}
 		*/
+
 	}
 	return r
 }
@@ -87,12 +88,13 @@ type targetObject struct {
 }
 
 type roleSentinel struct {
+	role
 }
 
-func (r *roleSentinel) Action(tar targetObject, player *user, g *game) {
+func (r roleSentinel) Action(tar targetObject, player *user, g *game) {
 
 }
 
-func (r *roleSentinel) String() string {
+func (r roleSentinel) String() string {
 	return "수호자"
 }

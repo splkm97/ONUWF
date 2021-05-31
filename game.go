@@ -17,9 +17,8 @@ type game struct {
 	// 현재 게임의 세션 주소
 	session *discordgo.Session
 
-	roleAddMsgID   string
 	enterGameMsgID string
-
+	roleAddMsgID   string
 	// 게임을 생성한 방장의 UID
 	masterID string
 
@@ -57,7 +56,7 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
-	g.curState = StatePrepare{g, 1, roleFactory{}}
+	g.curState = StatePrepare{g, 1, &roleFactory{}}
 	g.logMsg = make([]string, 0)
 	return
 }

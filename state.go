@@ -31,8 +31,7 @@ type StatePrepare struct {
 	// factory 에서 쓰이게 될 role index
 	roleIndex int
 
-	// roleFactory
-	rf roleFactory
+	rf *roleFactory
 }
 
 // pressNumBtn 사용자가 숫자 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
@@ -76,15 +75,16 @@ func (sPrepare StatePrepare) pressDirBtn(s *discordgo.Session, r *discordgo.Mess
 	if r.MessageID == sPrepare.g.enterGameMsgID {
 		// 게임 시작
 		if dir == 1 {
-			if len(sPrepare.g.roleSeq) == len(sPrepare.g.userList) + 3 {
-				g.state = StatePlayable{g: sPrepare.g}
+			if len(sPrepare.g.roleSeq) == len(sPrepare.g.userList)+3 {
+				sPrepare.g.curState = StatePrepare{g: sPrepare.g}
+				// 이부분 StatePlayable로 고쳐야 함.
 			} else {
 
 			}
 		}
 	} else if r.MessageID == sPrepare.g.roleAddMsgID {
 		// roleindex 증감
-		
+
 	}
 }
 
