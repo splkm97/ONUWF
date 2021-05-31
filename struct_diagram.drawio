@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-05-30T17:33:39.046Z" agent="5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.272 Whale/2.9.117.22 Safari/537.36" etag="AoufJrYba5DUxXuGfyCn" version="14.7.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-05-31T09:33:17.331Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15" etag="pMsP5dEauGg-k0ktfhFK" version="14.7.3" type="github">
   <diagram name="Page-1" id="6133507b-19e7-1e82-6fc7-422aa6c4b21f">
-    <mxGraphModel dx="1038" dy="544" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#F4F1DE" math="0" shadow="0">
+    <mxGraphModel dx="1654" dy="814" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#F4F1DE" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -19,16 +19,16 @@
           <mxGeometry y="78" width="250" height="58" as="geometry" />
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-5" value="game struct" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontColor=#393C56;strokeColor=#E07A5F;fillColor=#F2CC8F;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="380" y="130" width="310" height="470" as="geometry" />
+          <mxGeometry x="380" y="130" width="310" height="480" as="geometry" />
         </mxCell>
-        <mxCell id="4b7hiU9GkDOYzhKlwPfX-6" value="+ guildID : string&#xa;+ chanID : string&#xa;+ messageID : string&#xa;+ masterID : string&#xa;+ userList : []user&#xa;+ roleView : []role&#xa;+ roleSeq : []role&#xa;+ curState : state&#xa;+ roleIdxTable : [][]int&#xa;+ oriRoleIdxTable : [][]int&#xa;+ disRole : []role&#xa;+ logMsg : []string&#xa;+ session : *discordgo.Session" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#393C56;rounded=1;" parent="4b7hiU9GkDOYzhKlwPfX-5" vertex="1">
-          <mxGeometry y="26" width="310" height="194" as="geometry" />
+        <mxCell id="4b7hiU9GkDOYzhKlwPfX-6" value="+ guildID : string&#xa;+ chanID : string&#xa;+ roleAddMsgID : string&#xa;+ enterGameMsgID : string&#xa;+ masterID : string&#xa;+ userList : []user&#xa;+ roleView : []role&#xa;+ roleSeq : []role&#xa;+ curState : state&#xa;+ roleIdxTable : [][]int&#xa;+ oriRoleIdxTable : [][]int&#xa;+ disRole : []role&#xa;+ logMsg : []string&#xa;+ session : *discordgo.Session" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#393C56;rounded=1;" parent="4b7hiU9GkDOYzhKlwPfX-5" vertex="1">
+          <mxGeometry y="26" width="310" height="204" as="geometry" />
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-7" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=#E07A5F;fontColor=#393C56;labelBackgroundColor=#F4F1DE;rounded=1;" parent="4b7hiU9GkDOYzhKlwPfX-5" vertex="1">
-          <mxGeometry y="220" width="310" height="8" as="geometry" />
+          <mxGeometry y="230" width="310" height="8" as="geometry" />
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-8" value="+ messageCreate(session, m_create)&#xa;+ messageReactionAdd(session, r_add)&#xa;+ appendLog(msg string)&#xa;&#xa;+ getRole(uid string) : role&#xa;+ swapRoleFromUser(uid1, uid2 string)&#xa;+ getDisRole(disRoleIdx int): role&#xa;+ swapRoleFromDiscad(uid string, disRoleIdx int)&#xa;+ getRoleUsers(find role) : []user&#xa;+ rotateAllUserRole()&#xa;+ copyRole(destUID, srcUID string)&#xa;+ setPower(power int)&#xa;&#xa;+ setRole(uid string, item role)&#xa;+ setDisRole(disRoleIdx int, item role)&#xa;+ getDisrole(idRoleIdx int) role" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontColor=#393C56;rounded=1;" parent="4b7hiU9GkDOYzhKlwPfX-5" vertex="1">
-          <mxGeometry y="228" width="310" height="242" as="geometry" />
+          <mxGeometry y="238" width="310" height="242" as="geometry" />
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-10" value="werewolf struct" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontColor=#393C56;strokeColor=#E07A5F;fillColor=#F2CC8F;rounded=1;" parent="1" vertex="1">
           <mxGeometry x="450" y="640" width="160" height="68" as="geometry">
@@ -67,7 +67,7 @@
           <mxGeometry y="26" width="160" height="42" as="geometry" />
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-30" value="&lt;p style=&quot;margin: 0px ; margin-top: 4px ; text-align: center&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;state interface&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;span&gt;&amp;nbsp;+ pressNumBtn(session, m_reaction, int)&lt;/span&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px&quot;&gt;+ pressDisBtn(session, m_reaction)&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px&quot;&gt;+ pressYesBtn(session, m_reaction)&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px&quot;&gt;+ pressNoBtn(session, m_reaction)&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px&quot;&gt;+ pressDirBtn(session, m_reaction, int dir)&lt;/p&gt;&lt;p style=&quot;margin: 0px 0px 0px 4px&quot;&gt;+ sendFinish(session, m_create)&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=12;fontFamily=Helvetica;html=1;fontColor=#393C56;strokeColor=#E07A5F;fillColor=#F2CC8F;rounded=1;" parent="1" vertex="1">
-          <mxGeometry x="65" y="290" width="250" height="140" as="geometry" />
+          <mxGeometry x="65" y="340" width="250" height="140" as="geometry" />
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-31" value="user struct" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fontColor=#393C56;strokeColor=#E07A5F;fillColor=#F2CC8F;rounded=1;" parent="1" vertex="1">
           <mxGeometry x="750" y="166" width="140" height="100" as="geometry" />
@@ -129,10 +129,10 @@
         </mxCell>
         <mxCell id="4b7hiU9GkDOYzhKlwPfX-57" value="" style="endArrow=open;endFill=1;endSize=12;html=1;fontColor=#393C56;strokeColor=#E07A5F;fillColor=#F2CC8F;entryX=0.5;entryY=0;entryDx=0;entryDy=0;labelBackgroundColor=#F4F1DE;" parent="1" target="4b7hiU9GkDOYzhKlwPfX-30" edge="1">
           <mxGeometry width="160" relative="1" as="geometry">
-            <mxPoint x="379" y="262" as="sourcePoint" />
+            <mxPoint x="380" y="250" as="sourcePoint" />
             <mxPoint x="450" y="480" as="targetPoint" />
             <Array as="points">
-              <mxPoint x="190" y="262" />
+              <mxPoint x="190" y="250" />
             </Array>
           </mxGeometry>
         </mxCell>
