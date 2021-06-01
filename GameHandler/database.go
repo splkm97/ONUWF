@@ -28,19 +28,13 @@ func mongoConn() (client *mongo.Client, ctx context.Context) {
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		loggerError.Println("MongoDB connect Fail")
-		loggerDebug.Println("MongoDB connect Fail")
 		log.Fatal(err)
 	}
 
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		loggerError.Println("MongoDB client ping Fail")
-		loggerDebug.Println("MongoDB client ping Fail")
 		log.Fatal(err)
 	}
-	loggerError.Println("MongoDB Connection Success")
-	loggerDebug.Println("MongoDB Connection Success")
 	log.Println("MongoDB Connection Success")
 	return client, ctx
 }

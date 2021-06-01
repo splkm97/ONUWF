@@ -35,6 +35,5 @@ func (wf roleWerewolf) Action(tar targetObject, player *user, g *game) {
 		//}
 		s.ChannelMessageSendEmbed(player.dmChanID, embed.NewGenericEmbed("동료 늑대인간 확인", msg))
 	default:
-		loggerDebug.Printf("werewolf 의 선택지 오류, uid1: %v, uid2: %v, disRoleIdx: %v\n", tar.uid1, tar.uid2, tar.disRoleIdx)
 	}
 }

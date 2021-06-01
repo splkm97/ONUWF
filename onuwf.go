@@ -5,11 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	embed "github.com/clinet/discordgo-embed"
 )
 
 var (
@@ -57,7 +55,7 @@ func startGame(s *discordgo.Session, m *discordgo.MessageCreate) {
 	args[1] = "-cid=" + m.ChannelID
 	args[2] = "-mid=" + m.Author.ID
 	gameHandlerCmd := exec.Command(path, args...)
-	_, err := gameHandlerCmd.Output()
+	err := gameHandlerCmd.Run()
 
 	if err != nil {
 		msg := "게임 핸들러를 실행하지 못하였습니다. : "
@@ -70,14 +68,10 @@ func startGame(s *discordgo.Session, m *discordgo.MessageCreate) {
 		loggerError.Println(msg, err)
 		return
 	}
-	isInGame[m.GuildID+m.ChannelID] = true
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
-		if strings.HasSuffix(m.Content, "종료합니다.") {
-			isInGame[m.GuildID+m.ChannelID] = false
-		}
 		return
 	}
 
@@ -86,7 +80,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "현재 게임이 진행중인 채널입니다.")
 			return
 		}
-		s.ChannelMessageSendEmbed(m.ChannelID, embed.NewGenericEmbed("게임 상태", "게임을 시작하는 중입니다..."))
+		isInGame[m.GuildID+m.ChannelID] = true
 		go startGame(s, m)
+	}
+	if m.Content == "ㅁ강제종료" {
+		if isInGame[m.GuildID+m.ChannelID] {
+			isInGame[m.GuildID+m.ChannelID] = false
+		}
 	}
 }
