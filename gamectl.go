@@ -11,6 +11,10 @@ import (
 	embed "github.com/clinet/discordgo-embed"
 )
 
+var (
+	rf roleFactory
+)
+
 // startGame 은 새로운 게임이 시작될 때,
 // 해당 게임을 관리하는 새 세션을 만든다.
 // 이것은 강제종료 메시지를 수신하였을 때,
@@ -26,6 +30,7 @@ func startGame(m *discordgo.MessageCreate) {
 		fmt.Println("error creating Discord session,", err)
 		return
 	}
+	rf = roleFactory{}
 	dg.AddHandler(mcInGame)
 	dg.AddHandler(rcInGame)
 	err = dg.Open()

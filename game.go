@@ -57,7 +57,7 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
-	g.curState = StatePrepare{g, 1, roleFactory{}}
+	g.curState = &StatePrepare{g, 1, nil, nil}
 	g.logMsg = make([]string, 0)
 	return
 }
