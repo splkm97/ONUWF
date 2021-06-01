@@ -83,12 +83,12 @@ type targetObject struct {
 	actionType int
 	//			<action Type>
 	//
-	//     uid1  uid2  disRoleIdx
-	// 0:   o     o        x	swapRoleFromUser, copyRole
-	// 1:   o     x        o	swapRoleFromDiscard
-	// 2:   o     x        x	getRole, setRole, setPower
-	// 3:   x     x        o	getDisRole, setDisRole, getRoleUsers
-	// -1:  x     x        x	rotateAllUserRole
+	//      uid1  uid2  disRoleIdx
+	//  0:   o     o        x	swapRoleFromUser, copyRole
+	//  1:   o     x        o	swapRoleFromDiscard
+	//  2:   o     x        x	getRole, setRole, setPower
+	//  3:   x     x        o	getDisRole, setDisRole, getRoleUsers
+	// -1:   x     x        x	rotateAllUserRole, getRoleUsers
 	uid1       string
 	uid2       string
 	disRoleIdx int

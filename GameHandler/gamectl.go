@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,16 +29,17 @@ func init() {
 // 더 깔끔하게 수행할 수 있도록 한다.
 func main() {
 	loggerLog.Println("GameHandler 시작")
-	args := os.Args
-	if len(args) != 4 {
-		loggerError.Println("GameHandler argument error occured, len(args):", len(args))
-		fmt.Errorf("GameHandler argument error occured, len(args):", len(args))
-		return
-	}
+	gid := *flag.String("gid", "NO_GID", "실행한 길드의 고유값")
+	cid := *flag.String("cid", "NO_CID", "실행한 채널의 고유값")
+	uid := *flag.String("mid", "NO_MID", "게임을 시작한 방장의 유저 고유값")
+	flag.Parse()
+	if gid == "NO_GID" || cid == "NO_CID" || uid == "NO_MID" {
+		loggerDebug.Println("gid:", gid)
+		loggerDebug.Println("cid:", cid)
+		loggerDebug.Println("uid:", uid)
 
-	gid := args[1]
-	cid := args[2]
-	uid := args[3]
+		loggerError.Println("실행 실패: 명령행 인자가 올바르지 않습니다.")
+	}
 	curGame := newGame(gid, cid, uid)
 
 	dg, err := discordgo.New("Bot " + env["dgToken"])

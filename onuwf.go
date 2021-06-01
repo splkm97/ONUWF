@@ -52,17 +52,25 @@ func main() {
 
 func startGame(s *discordgo.Session, m *discordgo.MessageCreate) {
 	path, _ := exec.LookPath("./GameHandler/GameHandler")
-	gameHandlerCmd := exec.Command(path, m.GuildID, m.ChannelID, m.Author.ID)
-	err := gameHandlerCmd.Run()
+	args := make([]string, 3)
+	args[0] = "-gid=" + m.GuildID
+	args[1] = "-cid=" + m.ChannelID
+	args[2] = "-mid=" + m.Author.ID
+	gameHandlerCmd := exec.Command(path, args...)
+	_, err := gameHandlerCmd.Output()
+
 	if err != nil {
-		msg := "게임 핸들러를 실행하지 못하였습니다. :: "
+		msg := "게임 핸들러를 실행하지 못하였습니다. : "
 		guild, _ := s.Guild(m.GuildID)
 		channel, _ := s.Channel(m.ChannelID)
 		msg += "Guild: " + guild.Name
 		msg += ", Channel: " + channel.Name
 		msg += ", Master: " + m.Author.Username
-		loggerError.Println(msg)
+		msg += ", error: "
+		loggerError.Println(msg, err)
+		return
 	}
+	isInGame[m.GuildID+m.ChannelID] = true
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -73,14 +81,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if strings.HasPrefix(m.Content, "ㅁ") {
-		if m.Content == "ㅁ시작" {
-			if isInGame[m.GuildID+m.ChannelID] {
-				s.ChannelMessageSend(m.ChannelID, "현재 게임이 진행중인 채널입니다.")
-				return
-			}
-			s.ChannelMessageSendEmbed(m.ChannelID, embed.NewGenericEmbed("게임 상태", "게임을 시작하는 중입니다..."))
-			go startGame(s, m)
+	if m.Content == "ㅁ시작" {
+		if isInGame[m.GuildID+m.ChannelID] {
+			s.ChannelMessageSend(m.ChannelID, "현재 게임이 진행중인 채널입니다.")
+			return
 		}
+		s.ChannelMessageSendEmbed(m.ChannelID, embed.NewGenericEmbed("게임 상태", "게임을 시작하는 중입니다..."))
+		go startGame(s, m)
 	}
 }

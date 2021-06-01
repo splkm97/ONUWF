@@ -6,7 +6,6 @@ type roleWerewolf struct {
 	role
 }
 
-//
 func (wf roleWerewolf) Action(tar targetObject, player *user, g *game) {
 	s := g.session
 	switch tar.actionType {
