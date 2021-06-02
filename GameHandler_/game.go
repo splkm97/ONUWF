@@ -2,9 +2,9 @@ package main
 
 import (
 	"os"
-	"strconv"
 
 	"github.com/bwmarrin/discordgo"
+	embed "github.com/clinet/discordgo-embed"
 )
 
 // game 구조체는 게임 진행을 위한 정보를 담고 있는 스트럭처
@@ -60,19 +60,22 @@ func newGame(gid, cid, muid string) (g *game) {
 }
 
 // sendVoteMsg() 는 현재 참가자 모두에게 DM으로 투표 용지를 전송하고,
-// 각각의 투표 용지별로 messageID를 저장하여 반환해주는 함수이다.
-func (g *game) sendVoteMsg(s *discordgo.Session, page int) (messageIDs []string) {
+// 각각의 투표 용지별로 userList index 순서에 맞춰 MsgID 배열을 반환해주는 함수이다.
+func (g *game) sendVoteMsg(s *discordgo.Session) (messageIDs []string) {
+	messageIDs = make([]string, len(g.userList))
 	for i, me := range g.userList {
 		msg := ""
 		userListExceptMe := append(g.userList[:i], g.userList[i:]...)
-		for i, notMe := range userListExceptMe {
-			if i > 9 {
+		for i := 0; i < 9; i++ {
+			if i >= len(userListExceptMe) {
 				break
 			}
-			msg += strconv.Itoa(i+1) + " : `" + notMe.nick + "`\n"
+			msg += "`" + userListExceptMe[i].nick + "`\n"
 		}
-
+		mObj, _ := s.ChannelMessageSendEmbed(me.dmChanID, embed.NewGenericEmbed("투표 시작!", msg))
+		messageIDs[i] = mObj.ID
 	}
+	return messageIDs
 }
 
 func (g *game) setUserByID(s *discordgo.Session, uid string) {

@@ -46,7 +46,7 @@ func (sPrepare *StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.Mes
 			u := user{userID: r.UserID, nick: userNick.Username, chanID: r.ChannelID, dmChanID: userDM.ID}
 			sPrepare.g.userList = append(sPrepare.g.userList, u)
 			// 입장 확인 메세지 반영
-			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.enterGameMsg.ID, newEnterEmbed(sPrepare.g))
+			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.enterGameMsg.ID, newEnterEmbed(sPrepare.g).MessageEmbed)
 		}
 		// 직업추가 메세지에서 리액션한거라면
 	} else if r.MessageID == sPrepare.g.roleAddMsgID {
@@ -67,7 +67,7 @@ func (sPrepare *StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.Mes
 				sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, roleToAdd)
 			}
 			// 직업 추가 메세지 반영
-			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.roleAddMsg.ID, newRoleEmbed(sPrepare.roleIndex, sPrepare.g))
+			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.roleAddMsg.ID, newRoleEmbed(sPrepare.roleIndex, sPrepare.g).MessageEmbed)
 		}
 	}
 }

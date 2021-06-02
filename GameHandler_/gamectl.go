@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
@@ -12,10 +13,11 @@ import (
 )
 
 var (
-	gid      *string
-	curGame  *game
-	isUserIn map[string]bool
-	rf       roleFactory
+	gid        *string
+	curSession *discordgo.Session
+	curGame    *game
+	isUserIn   map[string]bool
+	rf         roleFactory
 )
 
 func init() {
@@ -48,6 +50,7 @@ func main() {
 		return
 	}
 	curGame.setUserByID(dg, curGame.masterID)
+	curSession = dg
 	sendGuideMsg(dg)
 
 	sc := make(chan os.Signal, 1)
@@ -56,11 +59,12 @@ func main() {
 	<-sc
 	dg.Close()
 }
-
+
 func roleCount(roleToFind role, roleView []role) int {
 	cnt := 0
-	for -, tmpRole range roleView {
-		if reflect.TypeOf(roleToFind) == reflect.TypeOf(tmpRole) {
+	findRoleName := roleToFind.String()
+	for _, tmpRole := range roleView {
+		if findRoleName == tmpRole.String() {
 			cnt++
 		}
 	}
@@ -72,43 +76,49 @@ func newRoleEmbed(rgIndex int, g *game) *embed.Embed {
 	roleEmbed := embed.NewEmbed()
 	roleEmbed.SetTitle("직업 추가")
 	roleEmbed.AddField(rg[rgIndex].RoleName, strings.Join(rg[rgIndex].RoleGuide, "\n"))
-	roleStr := "추가된 직업\n"
+	roleStr := ""
+	if len(g.roleView) == 0 {
+		roleStr += "*추가된 직업이 없습니다.*"
+	}
 	for _, item := range g.roleView {
 		cnt := roleCount(item, g.roleView)
-		roleStr += "`" + item.String() + " " + strconv.Itoa(cnt) + "개`"
+		roleStr += item.String() + " " + strconv.Itoa(cnt) + "개"
 		if cnt == rg[rgIndex].Max {
 			roleStr += " 최대"
 		}
 		roleStr += "\n"
 	}
-	roleEmbed.Description += roleStr
-	roleEmbed.SetFooter("현재 인원에 맞는 직업 수: `" + strconv.Itoa(len(g.roleView)) + "` / " + strconv.Itoa(len(g.userList)+3))
+	roleEmbed.AddField("추가된 직엄", roleStr)
+	roleEmbed.SetFooter("현재 인원에 맞는 직업 수: " + strconv.Itoa(len(g.roleView)) + " / " + strconv.Itoa(len(g.userList)+3))
 	return roleEmbed
 }
 
 // newEnterEmbed 함수는 게임 참여자 목록 임베드를 만든다
 func newEnterEmbed(g *game) *embed.Embed {
 	enterEmbed := embed.NewEmbed()
-	enterEmbed.SetTitle("직업 추가")
-	enterEmbed.AddField("게임 참가", "현재 참가 인원: `"+strconv.Itoa(len(g.userList))+"`명\n")
-	enterStr := "추가된 직업\n"
+	enterEmbed.SetTitle("게임 참가")
+	enterEmbed.AddField("", "현재 참가 인원: "+strconv.Itoa(len(g.userList))+"명\n")
+	enterStr := ""
+	if len(g.userList) == 0 {
+		enterStr += "*참가자가 없습니다.*"
+	}
 	for _, item := range g.userList {
 		enterStr += "`" + item.nick + "`\n"
 	}
-	enterEmbed.Description += enterStr
-	enterEmbed.Footer = &discordgo.MessageEmbedFooter{Text: "⭕: 입장\n❌: 퇴장"}
+	enterEmbed.AddField("참가자 목록", enterStr)
+	enterEmbed.SetFooter("⭕: 입장\n❌: 퇴장")
 	return enterEmbed
 }
 
 // sendGuideMsg 함수는 게임 시작 안내 메시지를 전송한다.
 func sendGuideMsg(s *discordgo.Session) {
 	if s != nil {
-		roleEmbed := embed.newRoleEmbed(0, curGame)
+		roleEmbed := newRoleEmbed(0, curGame)
 		roleMsg, _ := s.ChannelMessageSendEmbed(curGame.chanID, roleEmbed.MessageEmbed)
 		curGame.roleAddMsgID = roleMsg.ID
 		addRoleAddEmoji(s, roleMsg)
 		enterEmbed := newEnterEmbed(curGame)
-		enterMsg, _ := s.ChannelMessageSendEmbed(curGame.chanID, enterEmbed)
+		enterMsg, _ := s.ChannelMessageSendEmbed(curGame.chanID, enterEmbed.MessageEmbed)
 		curGame.enterGameMsgID = enterMsg.ID
 		addEnterGameEmoji(s, enterMsg)
 	}
@@ -137,6 +147,9 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if m.Content == "ㅁ강제종료" {
 			s.ChannelMessageSend(m.ChannelID, "게임을 강제종료합니다.")
 			curGame.killChan <- os.Interrupt
+		}
+		if m.Content == "ㅁ테스트" {
+			curGame.sendVoteMsg(s)
 		}
 	}
 }
