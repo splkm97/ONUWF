@@ -20,7 +20,7 @@ go get github.com/clinet/discordgo-embed
 
 # 개발 진행 상황
 
-branch `file-seperate` : 강제 종료 구현을 용이하게 하기 위해 게임별로 다른 프로세스를 실행하고, 해당 게임이 종료되었을 때 (강제종료, 정상종료) 해당 프로세스를 끝마친다. 이를 위한 외부 프로세스와 내부 프로세스를 각각 ONUWF, GameHandler 가 맡는다.
+branch `file-seperate` : 강제 종료 구현을 용이하게 하기 위해 게임별로 다른 프로세스를 실행하고, 해당 게임이 종료되었을 때 (강제종료, 정상종료) 해당 프로세스를 끝마친다. 이를 위한 외부 프로세스와 내부 프로세스를 각각 `ONUWF`, `GameHandler` 가 맡는다.
 
 # 빌드 방법
 
