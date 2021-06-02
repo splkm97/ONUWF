@@ -56,9 +56,20 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
-	g.curState = StatePrepare{g, 1, &roleFactory{}}
+	g.curState = &StatePrepare{g, 1, nil, nil}
 	g.logMsg = make([]string, 0)
 	return
+}
+
+func (g *game) setUserByID(s *discordgo.Session, uid string) {
+	var newone user
+	newone.userID = uid
+	dgUser, _ := s.User(uid)
+	newone.nick = dgUser.Username
+	newone.chanID = g.chanID
+	uChan, _ := s.UserChannelCreate(uid)
+	newone.dmChanID = uChan.ID
+	g.userList = append(g.userList, newone)
 }
 
 // UID 로 user 인스턴스를 구하는 함수
