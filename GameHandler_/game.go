@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -13,9 +14,6 @@ type game struct {
 
 	// 현재 게임이 진행중인 채널의 CID
 	chanID string
-
-	// 현재 게임의 세션 주소
-	session *discordgo.Session
 
 	enterGameMsgID string
 	roleAddMsgID   string
@@ -59,6 +57,22 @@ func newGame(gid, cid, mid string) (g *game) {
 	g.curState = &StatePrepare{g, 1, nil, nil}
 	g.logMsg = make([]string, 0)
 	return
+}
+
+// sendVoteMsg() 는 현재 참가자 모두에게 DM으로 투표 용지를 전송하고,
+// 각각의 투표 용지별로 messageID를 저장하여 반환해주는 함수이다.
+func (g *game) sendVoteMsg(s *discordgo.Session, page int) (messageIDs []string) {
+	for i, me := range g.userList {
+		msg := ""
+		userListExceptMe := append(g.userList[:i], g.userList[i:]...)
+		for i, notMe := range userListExceptMe {
+			if i > 9 {
+				break
+			}
+			msg += strconv.Itoa(i+1) + " : `" + notMe.nick + "`\n"
+		}
+
+	}
 }
 
 func (g *game) setUserByID(s *discordgo.Session, uid string) {

@@ -15,7 +15,7 @@ var (
 	gid      *string
 	curGame  *game
 	isUserIn map[string]bool
-	rf roleFactory
+	rf       roleFactory
 )
 
 func init() {
@@ -149,9 +149,7 @@ func messageReactionAdd(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 		go g.curState.pressDirBtn(s, r, 1)
 	}
 	if r.GuildID == curGame.guildID && r.ChannelID == curGame.chanID && (r.MessageID == curGame.enterGameMsgID || r.MessageID == curGame.roleAddMsgID) {
-		if isUserIn[r.UserID] {
-			s.MessageReactionRemove(r.ChannelID, r.MessageID, r.Emoji.Name, r.UserID)
-		}
+		s.MessageReactionRemove(r.ChannelID, r.MessageID, r.Emoji.Name, r.UserID)
 	}
 
 }
