@@ -81,6 +81,14 @@ func (rf *roleFactory) generateRole(num int) (r role) {
 // 적용되어야 하는 대상을 구분하는 기준으로 사용된다.
 type targetObject struct {
 	actionType int
+	//			<action Type>
+	//
+	//      uid1  uid2  disRoleIdx
+	//  0:   o     o        x	swapRoleFromUser, copyRole
+	//  1:   o     x        o	swapRoleFromDiscard
+	//  2:   o     x        x	getRole, setRole, setPower
+	//  3:   x     x        o	getDisRole, setDisRole, getRoleUsers
+	// -1:   x     x        x	rotateAllUserRole, getRoleUsers
 	uid1       string
 	uid2       string
 	disRoleIdx int

@@ -62,6 +62,17 @@ func newGame(gid, cid, mid string) (g *game) {
 	return
 }
 
+func (g *game) setUserByID(s *discordgo.Session, uid string) {
+	var newone user
+	newone.userID = uid
+	dgUser, _ := s.User(uid)
+	newone.nick = dgUser.Username
+	newone.chanID = g.chanID
+	uChan, _ := s.UserChannelCreate(uid)
+	newone.dmChanID = uChan.ID
+	g.userList = append(g.userList, newone)
+}
+
 // UID 로 user 인스턴스를 구하는 함수
 func (g *game) findUserByUID(uid string) (target *user) {
 	for i, item := range g.userList {
