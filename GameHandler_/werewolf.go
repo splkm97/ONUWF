@@ -38,6 +38,6 @@ func (wf roleWerewolf) Action(tar targetObject, player *user, g *game) {
 	}
 }
 
-func (wf *roleWerewolf) String() string {
+func (wf roleWerewolf) String() string {
 	return "늑대인간"
 }
