@@ -45,69 +45,29 @@ func (sPrepare *StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.Mes
 			userDM, _ := s.UserChannelCreate(r.UserID)
 			u := user{userID: r.UserID, nick: userNick.Username, chanID: r.ChannelID, dmChanID: userDM.ID}
 			sPrepare.g.userList = append(sPrepare.g.userList, u)
-			// 입장 확인 메세지 보낸 적 없으면 보냄
-			if sPrepare.enterGameMsg == nil {
-				msg := r.UserID + " 입장\n"
-				sPrepare.enterGameMsg, _ = s.ChannelMessageSendEmbed(sPrepare.g.chanID, embed.NewGenericEmbed("입장 확인", msg))
-				// 입장 확인 메세지 보낸 적 있으면 수정
-			} else {
-				var msg string
-				msg = sPrepare.enterGameMsg.Embeds[0].Description
-				msg += r.UserID + " 입장\n"
-				sPrepare.enterGameMsg.Embeds[0].Description = msg
-				s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.enterGameMsg.ID, sPrepare.enterGameMsg.Embeds[0])
-			}
+			// 입장 확인 메세지 반영
+			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.enterGameMsg.ID, newEnterEmbed(sPrepare.g))
 		}
 		// 직업추가 메세지에서 리액션한거라면
 	} else if r.MessageID == sPrepare.g.roleAddMsgID {
 		// roleFactory에서 현재 roleindex 위치 값을 받아 role 생성
 		roleToAdd := rf.generateRole(sPrepare.roleIndex)
-		// roleView는 ununique sorted니까 roleView에 중복된 상태로 sort index 찾아서 삽입
-		for i, item := range sPrepare.g.roleView {
-			if item.String() <= roleToAdd.String() {
-				tmp := append(sPrepare.g.roleView[:i], roleToAdd)
-				sPrepare.g.roleView = append(tmp, sPrepare.g.roleView[i:]...)
-				break
-			}
-		}
-		// roleSeq는 unique unsorted니까 roleSeq에 없으면 append
-		if findRoleIdx(roleToAdd, sPrepare.g.roleSeq) == -1 {
-			sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, roleToAdd)
-		}
-		// 직업 확인 메세지 보낸 적 없으면 보냄
-		if sPrepare.roleAddMsg == nil {
-			msg := roleToAdd.String() + " 1\n"
-			sPrepare.roleAddMsg, _ = s.ChannelMessageSendEmbed(sPrepare.g.chanID, embed.NewGenericEmbed("직업 확인", msg))
-			// 직업 확인 메세지 보낸 적 있으면 수정
-		} else {
-			var msg string
-			msg = sPrepare.roleAddMsg.Embeds[0].Description
-
-			rgxstr := regexp.MustCompile(roleToAdd.String() + " " + `\d+.*\n`)
-			rgxnum := regexp.MustCompile(`\d`)
-			// 직업 확인에 직업이 있을 때
-			if rgxstr.MatchString(msg) {
-				// 정규표현식으로 "직업 숫자\n" line으로 찾음
-				line := rgxstr.FindString(msg)
-				// line에서 숫자만 뽑아냄
-				num, _ := strconv.Atoi(rgxnum.FindString(line))
-				// role guide에 있는 직업의 max보다 큰지 확인
-				if num >= rg[sPrepare.roleIndex].Max {
-					// 최대라는 글자가 포함 안 돼있을 때만 line 맨 뒤에 최대 추가
-					if !strings.Contains(line, "최대") {
-						msg = strings.Replace(msg, line, strings.Replace(line, "\n", " 최대\n", 1), 1)
-					}
-				} else {
-					// 숫자 증가
-					msg = strings.Replace(msg, line, roleToAdd.String()+" "+fmt.Sprint(num+1)+"\n", 1)
+		// 추가된 role 개수가 max보다 작을 때만 추가
+		if roleCount(roleToAdd, sPrepare.g.roleView) < rg[sPrepare.roleIndex].Max {
+			// roleView는 ununique sorted니까 roleView에 중복된 상태로 sort index 찾아서 삽입
+			for i, item := range sPrepare.g.roleView {
+				if item.String() <= roleToAdd.String() {
+					tmp := append(sPrepare.g.roleView[:i], roleToAdd)
+					sPrepare.g.roleView = append(tmp, sPrepare.g.roleView[i:]...)
+					break
 				}
-				// 직업 확인에 직업이 없을 때
-			} else {
-				msg += roleToAdd.String() + " 1\n"
 			}
-
-			sPrepare.roleAddMsg.Embeds[0].Description = msg
-			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.roleAddMsg.ID, sPrepare.roleAddMsg.Embeds[0])
+			// roleSeq는 unique unsorted니까 roleSeq에 없으면 append
+			if findRoleIdx(roleToAdd, sPrepare.g.roleSeq) == -1 {
+				sPrepare.g.roleSeq = append(sPrepare.g.roleSeq, roleToAdd)
+			}
+			// 직업 추가 메세지 반영
+			s.ChannelMessageEditEmbed(sPrepare.g.chanID, sPrepare.roleAddMsg.ID, newRoleEmbed(sPrepare.roleIndex, sPrepare.g))
 		}
 	}
 }

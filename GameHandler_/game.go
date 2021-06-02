@@ -46,11 +46,11 @@ type game struct {
 	killChan chan os.Signal
 }
 
-func newGame(gid, cid, mid string) (g *game) {
+func newGame(gid, cid, muid string) (g *game) {
 	g = &game{}
 	g.guildID = gid
 	g.chanID = cid
-	g.masterID = mid
+	g.masterID = muid
 	g.userList = make([]user, 0)
 	g.roleSeq = make([]role, 0)
 	g.disRole = make([]role, 0)
