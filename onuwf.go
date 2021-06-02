@@ -49,7 +49,7 @@ func main() {
 }
 
 func startGame(s *discordgo.Session, m *discordgo.MessageCreate) {
-	path, _ := exec.LookPath("./GameHandler/GameHandler")
+	path, _ := exec.LookPath("./GameHandler_/GameHandler")
 	args := make([]string, 3)
 	args[0] = "-gid=" + m.GuildID
 	args[1] = "-cid=" + m.ChannelID
