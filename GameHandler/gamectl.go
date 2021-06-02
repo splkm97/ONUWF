@@ -4,6 +4,7 @@ import (
 	"flag"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
@@ -44,6 +45,7 @@ func main() {
 	if err != nil {
 		return
 	}
+	curGame.setUserByID(dg, curGame.masterID)
 	sendGuideMsg(dg, curGame)
 
 	sc := make(chan os.Signal, 1)
@@ -56,12 +58,19 @@ func main() {
 // sendGuideMsg 함수는 게임 시작 안내 메시지를 전송한다.
 func sendGuideMsg(s *discordgo.Session, g *game) {
 	if s != nil {
-		roleEmbed := embed.NewGenericEmbed("직업 추가", "1. 늑대인간 ...")
-		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, roleEmbed)
+		roleEmbed := embed.NewEmbed()
+		roleEmbed.SetTitle("직업 추가")
+		var rgMsg string
+		for _, item := range rg[0].RoleGuide {
+			rgMsg += item + "\n"
+		}
+		roleEmbed.AddField(rg[0].RoleName, rgMsg)
+		roleEmbed.SetFooter("현재 인원에 맞는 직업 수: " + strconv.Itoa(len(curGame.userList)+3))
+		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, roleEmbed.MessageEmbed)
 		g.roleAddMsgID = roleMsg.ID
 		addRoleAddEmoji(s, roleMsg)
-		enterEmbed := embed.NewGenericEmbed("게임 참가", "현재 참가 인원:\n")
-		enterEmbed.Description += curGame.userList[0].nick
+		enterEmbed := embed.NewGenericEmbed("게임 참가", "현재 참가 인원: `"+strconv.Itoa(len(curGame.userList))+"`명\n")
+		enterEmbed.Description += "`" + curGame.userList[0].nick + "`\n"
 		enterEmbed.Footer = &discordgo.MessageEmbedFooter{Text: "⭕: 입장\n❌: 퇴장"}
 		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, enterEmbed)
 		g.enterGameMsgID = enterMsg.ID
