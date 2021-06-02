@@ -69,10 +69,14 @@ func main() {
 // sendGuideMsg 함수는 게임 시작 안내 메시지를 전송한다.
 func sendGuideMsg(s *discordgo.Session, g *game) {
 	if s != nil {
-		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("직업 추가", "1. 늑대인간 ..."))
+		roleEmbed := embed.NewGenericEmbed("직업 추가", "1. 늑대인간 ...")
+		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, roleEmbed)
 		g.roleAddMsgID = roleMsg.ID
 		addRoleAddEmoji(s, roleMsg)
-		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, embed.NewGenericEmbed("게임 참가", "⭕: 입장\n❌: 퇴장"))
+		enterEmbed := embed.NewGenericEmbed("게임 참가", "현재 참가 인원:\n")
+		enterEmbed.Description += curGame.userList[0].nick
+		enterEmbed.Footer = discordgo.MessageEmbedFooter{Text: "⭕: 입장\n❌: 퇴장"}
+		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, enterEmbed)
 		g.enterGameMsgID = enterMsg.ID
 		addEnterGameEmoji(s, enterMsg)
 	}
