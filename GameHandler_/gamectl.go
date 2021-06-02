@@ -48,7 +48,7 @@ func main() {
 		return
 	}
 	curGame.setUserByID(dg, curGame.masterID)
-	sendGuideMsg(dg, curGame)
+	sendGuideMsg(dg)
 
 	sc := make(chan os.Signal, 1)
 	curGame.killChan = sc
@@ -56,26 +56,60 @@ func main() {
 	<-sc
 	dg.Close()
 }
+
+func roleCount(roleToFind role, roleView []role) int {
+	cnt := 0
+	for -, tmpRole range roleView {
+		if reflect.TypeOf(roleToFind) == reflect.TypeOf(tmpRole) {
+			cnt++
+		}
+	}
+	return cnt
+}
+
+// newRoleEmbed 함수는 role guide와 현재 게임에 추가된 직업 / 게임의 참여중인 인원수 + 3 임베드를 만든다
+func newRoleEmbed(rgIndex int, g *game) *embed.Embed {
+	roleEmbed := embed.NewEmbed()
+	roleEmbed.SetTitle("직업 추가")
+	roleEmbed.AddField(rg[rgIndex].RoleName, strings.Join(rg[rgIndex].RoleGuide, "\n"))
+	roleStr := "추가된 직업\n"
+	for _, item := range g.roleView {
+		cnt := roleCount(item, g.roleView)
+		roleStr += "`" + item.String() + " " + strconv.Itoa(cnt) + "개`"
+		if cnt == rg[rgIndex].Max {
+			roleStr += " 최대"
+		}
+		roleStr += "\n"
+	}
+	roleEmbed.Description += roleStr
+	roleEmbed.SetFooter("현재 인원에 맞는 직업 수: `" + strconv.Itoa(len(g.roleView)) + "` / " + strconv.Itoa(len(g.userList)+3))
+	return roleEmbed
+}
+
+// newEnterEmbed 함수는 게임 참여자 목록 임베드를 만든다
+func newEnterEmbed(g *game) *embed.Embed {
+	enterEmbed := embed.NewEmbed()
+	enterEmbed.SetTitle("직업 추가")
+	enterEmbed.AddField("게임 참가", "현재 참가 인원: `"+strconv.Itoa(len(g.userList))+"`명\n")
+	enterStr := "추가된 직업\n"
+	for _, item := range g.userList {
+		enterStr += "`" + item.nick + "`\n"
+	}
+	enterEmbed.Description += enterStr
+	enterEmbed.Footer = &discordgo.MessageEmbedFooter{Text: "⭕: 입장\n❌: 퇴장"}
+	return enterEmbed
+}
 
 // sendGuideMsg 함수는 게임 시작 안내 메시지를 전송한다.
-func sendGuideMsg(s *discordgo.Session, g *game) {
+func sendGuideMsg(s *discordgo.Session) {
 	if s != nil {
-		roleEmbed := embed.NewEmbed()
-		roleEmbed.SetTitle("직업 추가")
-		var rgMsg string
-		for _, item := range rg[0].RoleGuide {
-			rgMsg += item + "\n"
-		}
-		roleEmbed.AddField(rg[0].RoleName, rgMsg)
-		roleEmbed.SetFooter("현재 인원에 맞는 직업 수: " + strconv.Itoa(len(curGame.userList)+3))
-		roleMsg, _ := s.ChannelMessageSendEmbed(g.chanID, roleEmbed.MessageEmbed)
-		g.roleAddMsgID = roleMsg.ID
+		roleEmbed := embed.newRoleEmbed(0, curGame)
+		roleMsg, _ := s.ChannelMessageSendEmbed(curGame.chanID, roleEmbed.MessageEmbed)
+		curGame.roleAddMsgID = roleMsg.ID
 		addRoleAddEmoji(s, roleMsg)
-		enterEmbed := embed.NewGenericEmbed("게임 참가", "현재 참가 인원: `"+strconv.Itoa(len(curGame.userList))+"`명\n")
-		enterEmbed.Description += "`" + curGame.userList[0].nick + "`\n"
-		enterEmbed.Footer = &discordgo.MessageEmbedFooter{Text: "⭕: 입장\n❌: 퇴장"}
-		enterMsg, _ := s.ChannelMessageSendEmbed(g.chanID, enterEmbed)
-		g.enterGameMsgID = enterMsg.ID
+		enterEmbed := newEnterEmbed(curGame)
+		enterMsg, _ := s.ChannelMessageSendEmbed(curGame.chanID, enterEmbed)
+		curGame.enterGameMsgID = enterMsg.ID
 		addEnterGameEmoji(s, enterMsg)
 	}
 }
