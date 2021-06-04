@@ -4,7 +4,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="_3-g8rv-J8m66hV7IwJR-12" value="/ONUWF" style="ellipse;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
+        <mxCell id="_3-g8rv-J8m66hV7IwJR-12" value="/ONUWF" style="ellipse=1;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
           <mxGeometry x="88" y="552.5" width="80" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_3-g8rv-J8m66hV7IwJR-13" value="/cmd" style="ellipse=1;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
@@ -90,7 +90,7 @@
         <mxCell id="_3-g8rv-J8m66hV7IwJR-48" value="GameStarter.go" style="rounded=1;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
           <mxGeometry x="468.99749999999995" y="325" width="110" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="_3-g8rv-J8m66hV7IwJR-51" value="/GameHandler" style="ellipse;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
+        <mxCell id="_3-g8rv-J8m66hV7IwJR-51" value="/GameHandler" style="ellipse=1;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
           <mxGeometry x="468.99312499999996" y="455" width="120" height="30" as="geometry" />
         </mxCell>
         <mxCell id="_3-g8rv-J8m66hV7IwJR-52" value="/GameData" style="rounded=1;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;" vertex="1" parent="1">
