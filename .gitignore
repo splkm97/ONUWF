@@ -1,7 +1,6 @@
 GameStarter_
 env.json
 GameHandler_
-Log
-Log/error.log
-Log/user.log
-Log/debug.log
+log/error.log
+log/user.log
+log/debug.log
