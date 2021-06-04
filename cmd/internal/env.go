@@ -1,4 +1,6 @@
-package main
+// +build linux,amd64,go1.15,!cgo
+
+package gamehandler
 
 import (
 	"encoding/json"
@@ -9,7 +11,7 @@ import (
 
 var (
 	env map[string]string
-	rg  []roleGuide
+	rg  []RoleGuide
 	emj map[string]string
 
 	loggerLog   *log.Logger
@@ -18,15 +20,15 @@ var (
 	loggerDebug *log.Logger
 )
 
-type roleGuide struct {
+type RoleGuide struct {
 	RoleName  string   `json:"roleName"`
 	RoleGuide []string `json:"roleGuide"`
 	Max       int      `json:"max"`
 	Faction   string   `json:"faction"`
 }
 
-// 설치 환경 불러오기.
-func envInit() {
+// EnvInit 설치 환경 불러오기.
+func EnvInit() {
 	envFile, err := os.Open("env.json")
 	if err != nil {
 		log.Fatal(err)
@@ -41,8 +43,8 @@ func envInit() {
 	json.Unmarshal([]byte(byteValue), &env)
 }
 
-// 직업 가이드 에셋 불러오기.
-func roleGuideInit() {
+// RoleGuideInit 직업 가이드 에셋 불러오기.
+func RoleGuideInit() {
 	rgFile, err := os.Open("Asset/role_guide.json")
 	if err != nil {
 		log.Fatal(err)
@@ -57,8 +59,8 @@ func roleGuideInit() {
 	json.Unmarshal([]byte(byteValue), &rg)
 }
 
-// 이모지 맵에 불러오기.
-func emojiInit() {
+// EmojiInit 이모지 맵에 불러오기.
+func EmojiInit() {
 	emjFile, err := os.Open("Asset/emoji.json")
 	if err != nil {
 		log.Fatal(err)
@@ -73,8 +75,8 @@ func emojiInit() {
 	json.Unmarshal([]byte(byteValue), &emj)
 }
 
-// 로거 변수 초기화.
-func loggerInit() {
+// LoggerInit 로거 변수 초기화.
+func LoggerInit() {
 	logErrorFile, err := os.OpenFile(env["logErrorPath"], os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatal(err)

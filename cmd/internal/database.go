@@ -1,4 +1,6 @@
-package main
+// +build linux,amd64,go1.15,!cgo
+
+package gamehandler
 
 import (
 	"context"
@@ -12,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func mongoConn() (client *mongo.Client, ctx context.Context) {
+func MongoConn() (client *mongo.Client, ctx context.Context) {
 	// timeout 기반의 Context 생성
 	ctx, _ = context.WithTimeout(context.Background(), time.Second*4)
 
@@ -39,7 +41,7 @@ func mongoConn() (client *mongo.Client, ctx context.Context) {
 	return client, ctx
 }
 
-func allData(collection string, mongoDB *mongo.Database, ctx context.Context) string {
+func AllData(collection string, mongoDB *mongo.Database, ctx context.Context) string {
 	var datas []bson.M
 	res, err := mongoDB.Collection(collection).Find(ctx, bson.M{})
 	if err = res.All(ctx, &datas); err != nil {

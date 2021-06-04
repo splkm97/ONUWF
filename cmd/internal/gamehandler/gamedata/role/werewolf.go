@@ -1,12 +1,14 @@
-package main
+// +build linux,amd64,go1.15,!cgo
+
+package role
 
 import embed "github.com/clinet/discordgo-embed"
 
-type roleWerewolf struct {
+type RoleWerewolf struct {
 	role
 }
 
-func (wf roleWerewolf) Action(tar targetObject, player *user, g *game) {
+func (wf RoleWerewolf) Action(tar targetObject, player *user, g *game) {
 	switch tar.actionType {
 	case 1:
 		//recvRole := g.getDisRole(tar.disRoleIdx)
@@ -37,6 +39,6 @@ func (wf roleWerewolf) Action(tar targetObject, player *user, g *game) {
 	}
 }
 
-func (wf roleWerewolf) String() string {
+func (wf RoleWerewolf) String() string {
 	return "늑대인간"
 }

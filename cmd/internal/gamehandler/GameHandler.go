@@ -1,3 +1,5 @@
+// +build linux,amd64,go1.15,!cgo
+
 package main
 
 import (
@@ -15,9 +17,9 @@ import (
 var (
 	gid        *string
 	curSession *discordgo.Session
-	curGame    *game
+	curGame    *gamedata.Game
 	isUserIn   map[string]bool
-	rf         roleFactory
+	rf         RoleFactory
 )
 
 func init() {
@@ -60,7 +62,7 @@ func main() {
 	dg.Close()
 }
 
-func roleCount(roleToFind role, roleView []role) int {
+func roleCount(roleToFind Role, roleView []Role) int {
 	cnt := 0
 	findRoleName := roleToFind.String()
 	for _, tmpRole := range roleView {
@@ -72,7 +74,7 @@ func roleCount(roleToFind role, roleView []role) int {
 }
 
 // newRoleEmbed 함수는 role guide와 현재 게임에 추가된 직업 / 게임의 참여중인 인원수 + 3 임베드를 만든다
-func newRoleEmbed(rgIndex int, g *game) *embed.Embed {
+func newRoleEmbed(rgIndex int, g *Game) *embed.Embed {
 	roleEmbed := embed.NewEmbed()
 	roleEmbed.SetTitle("직업 추가")
 	roleEmbed.AddField(rg[rgIndex].RoleName, strings.Join(rg[rgIndex].RoleGuide, "\n"))
@@ -94,7 +96,7 @@ func newRoleEmbed(rgIndex int, g *game) *embed.Embed {
 }
 
 // newEnterEmbed 함수는 게임 참여자 목록 임베드를 만든다
-func newEnterEmbed(g *game) *embed.Embed {
+func newEnterEmbed(g *Game) *embed.Embed {
 	enterEmbed := embed.NewEmbed()
 	enterEmbed.SetTitle("게임 참가")
 	enterEmbed.AddField("", "현재 참가 인원: "+strconv.Itoa(len(g.userList))+"명\n")

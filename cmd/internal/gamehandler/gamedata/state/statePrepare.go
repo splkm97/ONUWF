@@ -1,4 +1,6 @@
-package main
+// +build linux,amd64,go1.15,!cgo
+
+package state
 
 import (
 	"fmt"
@@ -24,18 +26,18 @@ type StatePrepare struct {
 	enterGameMsg *discordgo.Message
 }
 
-// pressNumBtn 사용자가 숫자 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
-func (sPrepare *StatePrepare) pressNumBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd, num int) {
+// PressNumBtn 사용자가 숫자 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
+func (sPrepare *StatePrepare) PressNumBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd, num int) {
 	// do nothing
 }
 
-// pressDisBtn 사용자가 버려진 카드 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
-func (sPrepare *StatePrepare) pressDisBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+// PressDisBtn 사용자가 버려진 카드 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
+func (sPrepare *StatePrepare) PressDisBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	// do nothing
 }
 
-// pressYesBtn 사용자가 yes 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
-func (sPrepare *StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+// PressYesBtn 사용자가 yes 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
+func (sPrepare *StatePrepare) PressYesBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	// 입장 메세지에서 리액션한거라면
 	if r.MessageID == sPrepare.g.enterGameMsgID {
 		// userList에 없으면 user append()
@@ -72,8 +74,8 @@ func (sPrepare *StatePrepare) pressYesBtn(s *discordgo.Session, r *discordgo.Mes
 	}
 }
 
-// pressNoBtn 사용자가 No 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
-func (sPrepare *StatePrepare) pressNoBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+// PressNoBtn 사용자가 No 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
+func (sPrepare *StatePrepare) PressNoBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
 	// 입장 메세지에서 리액션한거라면
 	if r.MessageID == sPrepare.g.enterGameMsgID {
 		// userList에 있으면 지우기
@@ -130,8 +132,8 @@ func (sPrepare *StatePrepare) pressNoBtn(s *discordgo.Session, r *discordgo.Mess
 	}
 }
 
-// pressDirBtn 좌 -1, 우 1 사용자가 좌우 방향 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
-func (sPrepare *StatePrepare) pressDirBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd, dir int) {
+// PressDirBtn 좌 -1, 우 1 사용자가 좌우 방향 이모티콘을 눌렀을 때 StatePrepare에서 하는 동작
+func (sPrepare *StatePrepare) PressDirBtn(s *discordgo.Session, r *discordgo.MessageReactionAdd, dir int) {
 	if r.MessageID == sPrepare.g.enterGameMsgID {
 		// 게임 시작
 		if dir == 1 {
