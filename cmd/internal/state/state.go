@@ -1,6 +1,6 @@
 // +build linux,amd64,go1.15,!cgo
 
-package gamedata
+package state
 
 import (
 	"github.com/bwmarrin/discordgo"

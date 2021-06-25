@@ -1,6 +1,6 @@
 // +build linux,amd64,go1.15,!cgo
 
-package pkg
+package main
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	gh "../internal/gamehandler"
+	"ONUWF/cmd/pkg"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -18,9 +18,9 @@ var (
 )
 
 func init() {
-	gh.EnvInit()
-	gh.RoleGuideInit()
-	gh.LoggerInit()
+	pkg.EnvInit()
+	pkg.RoleGuideInit()
+	pkg.LoggerInit()
 
 	isInGame = make(map[string]bool)
 	/*

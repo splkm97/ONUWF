@@ -1,6 +1,6 @@
 // +build linux,amd64,go1.15,!cgo
 
-package gamedata
+package role
 
 // Role : 각 직업들의 정보를 담고 있는 스트럭처
 type Role interface {
